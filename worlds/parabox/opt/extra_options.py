@@ -9,7 +9,7 @@ class PriorityOrder(Choice):
     option_vanilla = 0
     option_random_level = 1
     option_random_seed = 2
-    default = 1
+    default = option_random_level
 
 
 class MaxFriendCount(Range):

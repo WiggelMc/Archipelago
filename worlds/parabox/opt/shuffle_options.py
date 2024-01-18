@@ -118,6 +118,7 @@ class ShuffleUndo(ShuffleProgressiveOption):
     TODO: Option Description
     """
     display_name = "Shuffle Undo"
+    default = super().option_unlocked
 
 
 class ShuffleBoxSizes(ShuffleProgressiveOrSeperateOption):

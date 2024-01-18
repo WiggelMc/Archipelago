@@ -1,9 +1,12 @@
+import logging
+
 from worlds.AutoWorld import World, WebWorld
 from worlds.parabox.options import ParaboxOptions
 from worlds.parabox.presets import option_presets
 from worlds.parabox.groups import item_name_groups
 
 PARABOX_GAME = "Patrick's Parabox"
+PARABOX_LOGGER = logging.getLogger(PARABOX_GAME)
 
 
 class ParaboxWebWorld(WebWorld):

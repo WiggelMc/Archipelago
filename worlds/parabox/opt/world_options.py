@@ -9,7 +9,7 @@ class LevelGeneration(Choice):
     option_vanilla = 0
     option_remix = 1
     option_randomize = 2
-    default = 0
+    default = option_vanilla
 
 
 class WorldGeneration(Choice):
@@ -19,7 +19,7 @@ class WorldGeneration(Choice):
     display_name = "World Generation"
     option_normal = 0
     option_random = 1
-    default = 0
+    default = option_normal
 
 
 class LevelCountOption(Range):
