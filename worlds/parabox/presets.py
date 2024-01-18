@@ -1,7 +1,7 @@
-from worlds.parabox.opt import shuffle_options
+from worlds.parabox import ParaboxOptions
 
 option_presets = {
     "Pain": {
-        "shuffle_undo": shuffle_options.ShuffleUndo.option_progressive
+        "shuffle_undo": ParaboxOptions.shuffle_undo.option_progressive
     }
 }
