@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from Options import PerGameCommonOptions
 from worlds.parabox.opt import world_options, shuffle_options, box_options, extra_options
+from Options import PerGameCommonOptions
 
 
 @dataclass

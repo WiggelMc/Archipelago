@@ -1,13 +1,12 @@
+import typing
 from abc import abstractmethod
 
-from BaseClasses import Item
-from worlds.parabox import PARABOX_GAME, ParaboxOptions
 from worlds.parabox.item_info import ParaboxItemInfoDefinitions as Items, ParaboxItemType, ParaboxItemInfo
-from worlds.parabox.opt.option_base import ShuffleOption, ShuffleProgressiveOption, ShuffleProgressiveOrSeperateOption
 
-
-class ParaboxItem(Item):
-    game: str = PARABOX_GAME
+if typing.TYPE_CHECKING:
+    from worlds.parabox.opt.option_base import ShuffleOption, ShuffleProgressiveOption, \
+        ShuffleProgressiveOrSeperateOption
+    from worlds.parabox.options import ParaboxOptions
 
 
 class ParaboxItemDataCreator:
@@ -147,3 +146,8 @@ class PossessItemDataCreator(ParaboxProgressiveOrSeperateShuffleItemDataCreator)
     items_single = [Items.possess]
     items_progressive = [Items.progressive_possess] * 2
     items_seperate = [Items.possess_box, Items.possess_wall]
+
+
+if __name__ == '__main__':
+    print("")
+    # TODO seperate AP code from Options to be able to use them on the client
