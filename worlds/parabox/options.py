@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from worlds.parabox.opt import world_options, shuffle_options, box_options, extra_options
+from worlds.parabox.opt import world_options, shuffle_options, box_options, extra_options, logic_options
 from Options import PerGameCommonOptions
 
 
@@ -74,6 +74,7 @@ class ParaboxOptions(PerGameCommonOptions):
     shuffle_infinite_enter_block: shuffle_options.ShuffleInfiniteEnterBlock
     shuffle_player: shuffle_options.ShufflePlayer
     shuffle_undo: shuffle_options.ShuffleUndo
+    undo_extra_copy_count: shuffle_options.UndoExtraCopyCount
 
     shuffle_box_sizes: shuffle_options.ShuffleBoxSizes
     shuffle_nested_goal: shuffle_options.ShuffleNestedGoal
@@ -81,6 +82,9 @@ class ParaboxOptions(PerGameCommonOptions):
 
     # Box Options
     box_types: box_options.BoxTypes
+
+    # Logic Options
+    fix_banishment: logic_options.FixBanishment
 
     # Extra Options
     priority_order: extra_options.PriorityOrder

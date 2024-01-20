@@ -1,3 +1,4 @@
+from Options import Range
 from worlds.parabox.opt.option_base import ShuffleOption, ShuffleProgressiveOption, ShuffleProgressiveOrSeperateOption
 
 
@@ -119,6 +120,16 @@ class ShuffleUndo(ShuffleProgressiveOption):
     """
     display_name = "Shuffle Undo"
     default = super().option_unlocked
+
+
+class UndoExtraCopyCount(Range):
+    """
+    TODO: Option Description
+    """
+    display_name = "Undo Extra Copy Count"
+    range_start = 0
+    range_end = 10
+    default = 0
 
 
 class ShuffleBoxSizes(ShuffleProgressiveOrSeperateOption):

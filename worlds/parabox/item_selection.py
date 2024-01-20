@@ -121,21 +121,25 @@ class UndoItemDataCreator(ParaboxProgressiveShuffleItemDataCreator):
 
     @staticmethod
     def get_undo_type(options: ParaboxOptions):
-        match options.shuffle_level_select:
-            case ParaboxOptions.shuffle_level_select.option_disabled:
-                return ParaboxItemType.USEFUL
-            case _:
-                return ParaboxItemType.PROGRESSION
+        if (
+                options.shuffle_level_select != ParaboxOptions.shuffle_level_select.option_disabled
+                and options.fix_banishment == ParaboxOptions.fix_banishment.option_vanilla
+                and options.world_generation != ParaboxOptions.world_generation.option_normal
+                and options.level_generation == ParaboxOptions.level_generation.option_randomize
+        ):
+            return ParaboxItemType.PROGRESSION
+        else:
+            return ParaboxItemType.USEFUL
 
     @classmethod
     def get_items_single(cls, options: ParaboxOptions):
         undo_type = cls.get_undo_type(options)
-        return [Items.undo.typed(undo_type)]
+        return [Items.undo.typed(undo_type)] * (1 + options.undo_extra_copy_count)
 
     @classmethod
     def get_items_progressive(cls, options: ParaboxOptions):
         undo_type = cls.get_undo_type(options)
-        return [Items.progressive_undo.typed(undo_type)] * 2
+        return [Items.progressive_undo.typed(undo_type)] * (2 + options.undo_extra_copy_count)
 
 
 class PossessItemDataCreator(ParaboxProgressiveOrSeperateShuffleItemDataCreator):
