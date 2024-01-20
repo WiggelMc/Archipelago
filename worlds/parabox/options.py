@@ -5,6 +5,48 @@ from Options import PerGameCommonOptions
 
 
 @dataclass
+class ParaboxOptionsValues:
+    level_generation: int
+    world_generation: int
+    normal_level_count: int
+    challenge_level_count: int
+    world_count: int
+
+    # Shuffle Options
+    shuffle_priority: int
+    shuffle_extrude: int
+    shuffle_inner_push: int
+    shuffle_block: int
+    shuffle_level_select: int
+    shuffle_clone: int
+    shuffle_open: int
+    shuffle_even: int
+    shuffle_oblong: int
+    shuffle_one: int
+
+    shuffle_recursion: int
+    shuffle_flip: int
+    shuffle_friend: int
+    shuffle_infinite_exit_block: int
+    shuffle_infinite_enter_block: int
+    shuffle_player: int
+    shuffle_undo: int
+
+    shuffle_box_sizes: int
+    shuffle_nested_goal: int
+    shuffle_possess: int
+
+    # Box Options
+    box_types: int
+
+    # Extra Options
+    priority_order: int
+    max_friend_count: int
+    max_infinite_exit_level: int
+    max_infinite_enter_level: int
+
+
+@dataclass
 class ParaboxOptions(PerGameCommonOptions):
     # World Options
     level_generation: world_options.LevelGeneration
