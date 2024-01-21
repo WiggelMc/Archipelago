@@ -3,8 +3,8 @@ import logging
 from worlds.AutoWorld import World, WebWorld
 from worlds.parabox.external.item_info import get_item_name_to_id
 from worlds.parabox.options import ParaboxOptions
-from worlds.parabox.presets import option_presets
-from worlds.parabox.groups import item_name_groups
+from worlds.parabox.external.presets import option_presets
+from worlds.parabox.external.groups import item_name_groups
 
 PARABOX_GAME = "Patrick's Parabox"
 PARABOX_LOGGER = logging.getLogger(PARABOX_GAME)
