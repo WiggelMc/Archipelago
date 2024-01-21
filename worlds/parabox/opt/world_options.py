@@ -55,6 +55,27 @@ class WorldGeneration(Choice):
     default = option_vanilla
 
 
+class WorldDoorKeys(Choice):
+    """
+    TODO: Option Description
+    """
+    display_name = "World Door Keys"
+    option_levels = 0
+    option_keys = 1
+    option_mixed = 2
+    default = option_levels
+
+
+class WorldDoorKeyGroupCount(Choice):
+    """
+    TODO: Option Description
+    """
+    display_name = "World Door Key Group Count"
+    range_start = 1
+    range_end = 100
+    default = 100
+
+
 class WorldCount(Range):
     """
     TODO: Option Description

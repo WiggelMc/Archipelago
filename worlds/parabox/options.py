@@ -54,6 +54,8 @@ class ParaboxOptions(PerGameCommonOptions):
     goal_unlock_world_count: world_options.GoalUnlockWorldCount
     level_generation: world_options.LevelGeneration
     world_generation: world_options.WorldGeneration
+    world_door_keys: world_options.WorldDoorKeys
+    world_door_key_group_count: world_options.WorldDoorKeyGroupCount
     world_count: world_options.WorldCount
 
     # Shuffle Options
