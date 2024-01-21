@@ -66,7 +66,7 @@ class WorldDoorKeys(Choice):
     default = option_levels
 
 
-class WorldDoorKeyGroupCount(Choice):
+class WorldDoorKeyGroupCount(Range):
     """
     TODO: Option Description
     """
