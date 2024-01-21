@@ -1,4 +1,6 @@
+import dataclasses
 from dataclasses import dataclass
+from typing import Any
 
 from worlds.parabox.opt import world_options, shuffle_options, box_options, extra_options, logic_options
 from Options import PerGameCommonOptions
@@ -52,3 +54,7 @@ class ParaboxOptions(PerGameCommonOptions):
     max_friend_count: extra_options.MaxFriendCount
     max_infinite_exit_level: extra_options.MaxInfiniteExitLevel
     max_infinite_enter_level: extra_options.MaxInfiniteEnterLevel
+
+
+def options_to_dict(options: ParaboxOptions) -> dict[str, Any]:
+    return options.as_dict(*[field.name for field in dataclasses.fields(ParaboxOptions)], casing="snake")

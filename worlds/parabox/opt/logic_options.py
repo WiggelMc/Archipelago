@@ -1,12 +1,6 @@
 from Options import Choice
+from worlds.parabox.external.opt.logic_option_values import FixBanishmentValues
 
 
-class FixBanishment(Choice):
-    """
-    TODO: Option Description
-    """
-    display_name = "Fix Banishment"
-    option_vanilla = 0
-    option_block_travel = 1
-    option_skip_travel = 2
-    default = option_vanilla
+class FixBanishment(FixBanishmentValues, Choice):
+    __doc__ = FixBanishmentValues.__doc__

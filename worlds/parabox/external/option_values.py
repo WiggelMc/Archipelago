@@ -1,8 +1,10 @@
+import dataclasses
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
-class ParaboxOptionsValues:
+class ParaboxOptionValues:
     # World Options
     goal: int
     goal_unlock: int
@@ -49,3 +51,8 @@ class ParaboxOptionsValues:
     max_friend_count: int
     max_infinite_exit_level: int
     max_infinite_enter_level: int
+
+
+def option_values_from_dict(options: dict[str, Any]) -> ParaboxOptionValues:
+    fields = {field.name for field in dataclasses.fields(ParaboxOptionValues)}
+    return ParaboxOptionValues(**{k: v for k, v in options.items() if k in fields})

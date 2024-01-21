@@ -1,18 +1,18 @@
-import typing
 from abc import abstractmethod
 
-from worlds.parabox.item_info import ParaboxItemInfoDefinitions as Items, ParaboxItemType, ParaboxItemInfo
-
-if typing.TYPE_CHECKING:
-    from worlds.parabox.opt.option_base import ShuffleOption, ShuffleProgressiveOption, \
-        ShuffleProgressiveOrSeperateOption
-    from worlds.parabox.options import ParaboxOptions
+from item_info import ParaboxItemInfoDefinitions as Items, ParaboxItemType, ParaboxItemInfo
+from opt.logic_option_values import FixBanishmentValues
+from opt.option_base_values import ShuffleOptionValues, ShuffleProgressiveOptionValues, \
+    ShuffleProgressiveOrSeperateOptionValues
+from opt.shuffle_option_values import ShuffleLevelSelectValues
+from opt.world_option_values import WorldGenerationValues, LevelGenerationValues
+from option_values import ParaboxOptionValues
 
 
 class ParaboxItemDataCreator:
     @classmethod
     @abstractmethod
-    def create_items(cls, options: ParaboxOptions) -> list[ParaboxItemInfo]:
+    def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
         pass
 
 
@@ -22,18 +22,18 @@ class ParaboxShuffleItemDataCreator(ParaboxItemDataCreator):
 
     @staticmethod
     @abstractmethod
-    def get_option(options: ParaboxOptions) -> ShuffleOption:
+    def get_option(options: ParaboxOptionValues) -> int:
         pass
 
     @classmethod
-    def get_items_single(cls, options: ParaboxOptions):
+    def get_items_single(cls, options: ParaboxOptionValues):
         return cls.items_single
 
     @classmethod
-    def create_items(cls, options: ParaboxOptions) -> list[ParaboxItemInfo]:
+    def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
         option = cls.get_option(options)
         match option:
-            case ShuffleOption.option_single:
+            case ShuffleOptionValues.option_single:
                 return cls.get_items_single(options)
             case _:
                 return []
@@ -46,24 +46,24 @@ class ParaboxProgressiveShuffleItemDataCreator(ParaboxItemDataCreator):
 
     @staticmethod
     @abstractmethod
-    def get_option(options: ParaboxOptions) -> ShuffleProgressiveOption:
+    def get_option(options: ParaboxOptionValues) -> int:
         pass
 
     @classmethod
-    def get_items_single(cls, options: ParaboxOptions):
+    def get_items_single(cls, options: ParaboxOptionValues):
         return cls.items_single
 
     @classmethod
-    def get_items_progressive(cls, options: ParaboxOptions):
+    def get_items_progressive(cls, options: ParaboxOptionValues):
         return cls.items_progressive
 
     @classmethod
-    def create_items(cls, options: ParaboxOptions) -> list[ParaboxItemInfo]:
+    def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
         option = cls.get_option(options)
         match option:
-            case ShuffleProgressiveOption.option_single:
+            case ShuffleProgressiveOptionValues.option_single:
                 return cls.get_items_single(options)
-            case ShuffleProgressiveOption.option_progressive:
+            case ShuffleProgressiveOptionValues.option_progressive:
                 return cls.get_items_progressive(options)
             case _:
                 return []
@@ -77,30 +77,30 @@ class ParaboxProgressiveOrSeperateShuffleItemDataCreator(ParaboxItemDataCreator)
 
     @staticmethod
     @abstractmethod
-    def get_option(options: ParaboxOptions) -> ShuffleProgressiveOrSeperateOption:
+    def get_option(options: ParaboxOptionValues) -> int:
         pass
 
     @classmethod
-    def get_items_single(cls, options: ParaboxOptions):
+    def get_items_single(cls, options: ParaboxOptionValues):
         return cls.items_single
 
     @classmethod
-    def get_items_progressive(cls, options: ParaboxOptions):
+    def get_items_progressive(cls, options: ParaboxOptionValues):
         return cls.items_progressive
 
     @classmethod
-    def get_items_seperate(cls, options: ParaboxOptions):
+    def get_items_seperate(cls, options: ParaboxOptionValues):
         return cls.items_seperate
 
     @classmethod
-    def create_items(cls, options: ParaboxOptions) -> list[ParaboxItemInfo]:
+    def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
         option = cls.get_option(options)
         match option:
-            case ShuffleProgressiveOrSeperateOption.option_single:
+            case ShuffleProgressiveOrSeperateOptionValues.option_single:
                 return cls.get_items_single(options)
-            case ShuffleProgressiveOrSeperateOption.option_progressive:
+            case ShuffleProgressiveOrSeperateOptionValues.option_progressive:
                 return cls.get_items_progressive(options)
-            case ShuffleProgressiveOrSeperateOption.option_seperate:
+            case ShuffleProgressiveOrSeperateOptionValues.option_seperate:
                 return cls.get_items_seperate(options)
             case _:
                 return []
@@ -108,7 +108,7 @@ class ParaboxProgressiveOrSeperateShuffleItemDataCreator(ParaboxItemDataCreator)
 
 class PriorityItemDataCreator(ParaboxShuffleItemDataCreator):
     @staticmethod
-    def get_option(options: ParaboxOptions) -> ShuffleOption:
+    def get_option(options: ParaboxOptionValues) -> int:
         return options.shuffle_priority
 
     items_single = [Items.priority]
@@ -116,36 +116,36 @@ class PriorityItemDataCreator(ParaboxShuffleItemDataCreator):
 
 class UndoItemDataCreator(ParaboxProgressiveShuffleItemDataCreator):
     @staticmethod
-    def get_option(options: ParaboxOptions) -> ShuffleProgressiveOption:
+    def get_option(options: ParaboxOptionValues) -> int:
         return options.shuffle_undo
 
     @staticmethod
-    def get_undo_type(options: ParaboxOptions):
+    def get_undo_type(options: ParaboxOptionValues):
         if (
-                options.shuffle_level_select != ParaboxOptions.shuffle_level_select.option_disabled
-                and options.fix_banishment == ParaboxOptions.fix_banishment.option_vanilla
+                options.shuffle_level_select != ShuffleLevelSelectValues.option_disabled
+                and options.fix_banishment == FixBanishmentValues.option_vanilla
                 and options.world_generation not in [
-                    ParaboxOptions.world_generation.option_vanilla, ParaboxOptions.world_generation.option_shuffle]
-                and options.level_generation == ParaboxOptions.level_generation.option_randomize
+                    WorldGenerationValues.option_vanilla, WorldGenerationValues.option_shuffle]
+                and options.level_generation == LevelGenerationValues.option_randomize
         ):
             return ParaboxItemType.PROGRESSION
         else:
             return ParaboxItemType.USEFUL
 
     @classmethod
-    def get_items_single(cls, options: ParaboxOptions):
+    def get_items_single(cls, options: ParaboxOptionValues):
         undo_type = cls.get_undo_type(options)
         return [Items.undo.typed(undo_type)] * (1 + options.undo_extra_copy_count)
 
     @classmethod
-    def get_items_progressive(cls, options: ParaboxOptions):
+    def get_items_progressive(cls, options: ParaboxOptionValues):
         undo_type = cls.get_undo_type(options)
         return [Items.progressive_undo.typed(undo_type)] * (2 + options.undo_extra_copy_count)
 
 
 class PossessItemDataCreator(ParaboxProgressiveOrSeperateShuffleItemDataCreator):
     @staticmethod
-    def get_option(options: ParaboxOptions) -> ShuffleProgressiveOrSeperateOption:
+    def get_option(options: ParaboxOptionValues) -> int:
         return options.shuffle_possess
 
     items_single = [Items.possess]

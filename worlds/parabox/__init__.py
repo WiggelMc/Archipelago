@@ -1,7 +1,7 @@
 import logging
 
 from worlds.AutoWorld import World, WebWorld
-from worlds.parabox.item_info import get_item_name_to_id
+from worlds.parabox.external.item_info import get_item_name_to_id
 from worlds.parabox.options import ParaboxOptions
 from worlds.parabox.presets import option_presets
 from worlds.parabox.groups import item_name_groups

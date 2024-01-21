@@ -1,42 +1,19 @@
 from Options import Choice, Range
+from worlds.parabox.external.opt.extra_option_values import PriorityOrderValues, MaxFriendCountValues, \
+    MaxInfiniteExitLevelValues, MaxInfiniteEnterLevelValues
 
 
-class PriorityOrder(Choice):
-    """
-    TODO: Option Description
-    """
-    display_name = "Priority Order"
-    option_vanilla = 0
-    option_random_level = 1
-    option_random_seed = 2
-    default = option_random_level
+class PriorityOrder(PriorityOrderValues, Choice):
+    __doc__ = PriorityOrderValues.__doc__
 
 
-class MaxFriendCount(Range):
-    """
-    TODO: Option Description
-    """
-    display_name = "Max Friend Count"
-    range_start = 1
-    range_end = 20
-    default = 4
+class MaxFriendCount(MaxFriendCountValues, Range):
+    __doc__ = MaxFriendCountValues.__doc__
 
 
-class MaxInfiniteExitLevel(Range):
-    """
-    TODO: Option Description
-    """
-    display_name = "Max Infinite Exit Level"
-    range_start = 1
-    range_end = 10
-    default = 5
+class MaxInfiniteExitLevel(MaxInfiniteExitLevelValues, Range):
+    __doc__ = MaxInfiniteExitLevelValues.__doc__
 
 
-class MaxInfiniteEnterLevel(Range):
-    """
-    TODO: Option Description
-    """
-    display_name = "Max Infinite Enter Level"
-    range_start = 1
-    range_end = 10
-    default = 5
+class MaxInfiniteEnterLevel(MaxInfiniteEnterLevelValues, Range):
+    __doc__ = MaxInfiniteEnterLevelValues.__doc__

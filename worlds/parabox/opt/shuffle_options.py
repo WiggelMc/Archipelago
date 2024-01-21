@@ -1,153 +1,92 @@
-from Options import Range
-from worlds.parabox.opt.option_base import ShuffleOption, ShuffleProgressiveOption, ShuffleProgressiveOrSeperateOption
+from Options import Choice, Range
+from worlds.parabox.external.opt.shuffle_option_values import ShufflePriorityValues, ShuffleExtrudeValues, \
+    ShuffleInnerPushValues, ShuffleBlockValues, ShuffleLevelSelectValues, ShuffleCloneValues, ShuffleOpenValues, \
+    ShuffleEvenValues, ShuffleOblongValues, ShuffleOneValues, ShuffleRecursionValues, ShuffleFlipValues, \
+    ShuffleFriendValues, ShuffleInfiniteExitBlockValues, ShuffleInfiniteEnterBlockValues, ShufflePlayerValues, \
+    ShuffleUndoValues, UndoExtraCopyCountValues, ShuffleBoxSizesValues, ShuffleNestedGoalValues, ShufflePossessValues
 
 
-class ShufflePriority(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Priority"
+# noinspection DuplicatedCode
+class ShufflePriority(ShufflePriorityValues, Choice):
+    __doc__ = ShufflePriorityValues.__doc__
 
 
-class ShuffleExtrude(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Extrude"
+class ShuffleExtrude(ShuffleExtrudeValues, Choice):
+    __doc__ = ShuffleExtrudeValues.__doc__
 
 
-class ShuffleInnerPush(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Inner Push"
+class ShuffleInnerPush(ShuffleInnerPushValues, Choice):
+    __doc__ = ShuffleInnerPushValues.__doc__
 
 
-class ShuffleBlock(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Block"
+class ShuffleBlock(ShuffleBlockValues, Choice):
+    __doc__ = ShuffleBlockValues.__doc__
 
 
-class ShuffleLevelSelect(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Level Select"
+class ShuffleLevelSelect(ShuffleLevelSelectValues, Choice):
+    __doc__ = ShuffleLevelSelectValues.__doc__
 
 
-class ShuffleClone(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Clone"
+class ShuffleClone(ShuffleCloneValues, Choice):
+    __doc__ = ShuffleCloneValues.__doc__
 
 
-class ShuffleOpen(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Open"
+class ShuffleOpen(ShuffleOpenValues, Choice):
+    __doc__ = ShuffleOpenValues.__doc__
 
 
-class ShuffleEven(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Even"
+class ShuffleEven(ShuffleEvenValues, Choice):
+    __doc__ = ShuffleEvenValues.__doc__
 
 
-class ShuffleOblong(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Oblong"
+class ShuffleOblong(ShuffleOblongValues, Choice):
+    __doc__ = ShuffleOblongValues.__doc__
 
 
-class ShuffleOne(ShuffleOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle One"
+class ShuffleOne(ShuffleOneValues, Choice):
+    __doc__ = ShuffleOneValues.__doc__
 
 
-class ShuffleRecursion(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Recursion"
+# noinspection DuplicatedCode
+class ShuffleRecursion(ShuffleRecursionValues, Choice):
+    __doc__ = ShuffleRecursionValues.__doc__
 
 
-class ShuffleFlip(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Flip"
+class ShuffleFlip(ShuffleFlipValues, Choice):
+    __doc__ = ShuffleFlipValues.__doc__
 
 
-class ShuffleFriend(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Friend"
+class ShuffleFriend(ShuffleFriendValues, Choice):
+    __doc__ = ShuffleFriendValues.__doc__
 
 
-class ShuffleInfiniteExitBlock(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Infinite Exit Block"
+class ShuffleInfiniteExitBlock(ShuffleInfiniteExitBlockValues, Choice):
+    __doc__ = ShuffleInfiniteExitBlockValues.__doc__
 
 
-class ShuffleInfiniteEnterBlock(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Infinite Enter Block"
+class ShuffleInfiniteEnterBlock(ShuffleInfiniteEnterBlockValues, Choice):
+    __doc__ = ShuffleInfiniteEnterBlockValues.__doc__
 
 
-class ShufflePlayer(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Player"
+class ShufflePlayer(ShufflePlayerValues, Choice):
+    __doc__ = ShufflePlayerValues.__doc__
 
 
-class ShuffleUndo(ShuffleProgressiveOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Undo"
-    default = super().option_unlocked
+class ShuffleUndo(ShuffleUndoValues, Choice):
+    __doc__ = ShuffleUndoValues.__doc__
 
 
-class UndoExtraCopyCount(Range):
-    """
-    TODO: Option Description
-    """
-    display_name = "Undo Extra Copy Count"
-    range_start = 0
-    range_end = 10
-    default = 0
+class UndoExtraCopyCount(UndoExtraCopyCountValues, Range):
+    __doc__ = UndoExtraCopyCountValues.__doc__
 
 
-class ShuffleBoxSizes(ShuffleProgressiveOrSeperateOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Box Sizes"
+class ShuffleBoxSizes(ShuffleBoxSizesValues, Choice):
+    __doc__ = ShuffleBoxSizesValues.__doc__
 
 
-class ShuffleNestedGoal(ShuffleProgressiveOrSeperateOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Nested Goal"
+class ShuffleNestedGoal(ShuffleNestedGoalValues, Choice):
+    __doc__ = ShuffleNestedGoalValues.__doc__
 
 
-class ShufflePossess(ShuffleProgressiveOrSeperateOption):
-    """
-    TODO: Option Description
-    """
-    display_name = "Shuffle Possess"
+class ShufflePossess(ShufflePossessValues, Choice):
+    __doc__ = ShufflePossessValues.__doc__
