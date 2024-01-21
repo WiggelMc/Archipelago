@@ -6,7 +6,7 @@ from opt.option_base_values import ShuffleOptionValues, ShuffleProgressiveOption
     ShuffleProgressiveOrSeperateOptionValues
 from opt.shuffle_option_values import ShuffleLevelSelectValues
 from opt.world_option_values import WorldGenerationValues, LevelGenerationValues
-from option_values import ParaboxOptionValues
+from option_values import ParaboxOptionValues, option_values_from_dict
 
 
 class ParaboxItemDataCreator:
@@ -154,5 +154,53 @@ class PossessItemDataCreator(ParaboxProgressiveOrSeperateShuffleItemDataCreator)
 
 
 if __name__ == '__main__':
-    print("")
-    # TODO seperate AP code from Options to be able to use them on the client
+    print("Test")
+    testOptions = {
+        "goal": 0, 
+        "goal_unlock": 0, 
+        "goal_unlock_world_count": 0, 
+        "level_generation": 0, 
+        "world_generation": 0, 
+        "world_door_keys": 0, 
+        "world_door_key_group_count": 0, 
+        "world_count": 0, 
+
+        # Shuffle Options
+        "shuffle_priority": 0, 
+        "shuffle_extrude": 0, 
+        "shuffle_inner_push": 0, 
+        "shuffle_block": 0, 
+        "shuffle_level_select": 0, 
+        "shuffle_clone": 0, 
+        "shuffle_open": 0, 
+        "shuffle_even": 0, 
+        "shuffle_oblong": 0, 
+        "shuffle_one": 0, 
+
+        "shuffle_recursion": 0, 
+        "shuffle_flip": 0, 
+        "shuffle_friend": 0, 
+        "shuffle_infinite_exit_block": 0, 
+        "shuffle_infinite_enter_block": 0, 
+        "shuffle_player": 0, 
+        "shuffle_undo": 0, 
+        "undo_extra_copy_count": 0, 
+
+        "shuffle_box_sizes": 0, 
+        "shuffle_nested_goal": 0, 
+        "shuffle_possess": 4,
+
+        # Box Options
+        "box_types": 0, 
+
+        # Logic Options
+        "fix_banishment": 0, 
+
+        # Extra Options
+        "priority_order": 0, 
+        "max_friend_count": 0, 
+        "max_infinite_exit_level": 0, 
+        "max_infinite_enter_level": 0, 
+    }
+    testOptionsDataclass = option_values_from_dict(testOptions)
+    print(PossessItemDataCreator.create_items(testOptionsDataclass))

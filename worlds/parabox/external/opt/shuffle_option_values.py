@@ -1,4 +1,4 @@
-from option_base_values import ShuffleOptionValues, ShuffleProgressiveOptionValues, \
+from .option_base_values import ShuffleOptionValues, ShuffleProgressiveOptionValues, \
     ShuffleProgressiveOrSeperateOptionValues
 
 
@@ -119,7 +119,7 @@ class ShuffleUndoValues(ShuffleProgressiveOptionValues):
     TODO: Option Description
     """
     display_name = "Shuffle Undo"
-    default = super().option_unlocked
+    default = ShuffleProgressiveOptionValues.option_unlocked
 
 
 class UndoExtraCopyCountValues:
