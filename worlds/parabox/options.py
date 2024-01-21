@@ -49,10 +49,11 @@ class ParaboxOptionsValues:
 @dataclass
 class ParaboxOptions(PerGameCommonOptions):
     # World Options
+    goal: world_options.Goal
+    goal_unlock: world_options.GoalUnlock
+    goal_unlock_world_count: world_options.GoalUnlockWorldCount
     level_generation: world_options.LevelGeneration
     world_generation: world_options.WorldGeneration
-    normal_level_count: world_options.NormalLevelCount
-    challenge_level_count: world_options.ChallengeLevelCount
     world_count: world_options.WorldCount
 
     # Shuffle Options

@@ -124,7 +124,8 @@ class UndoItemDataCreator(ParaboxProgressiveShuffleItemDataCreator):
         if (
                 options.shuffle_level_select != ParaboxOptions.shuffle_level_select.option_disabled
                 and options.fix_banishment == ParaboxOptions.fix_banishment.option_vanilla
-                and options.world_generation != ParaboxOptions.world_generation.option_normal
+                and options.world_generation not in [
+                    ParaboxOptions.world_generation.option_vanilla, ParaboxOptions.world_generation.option_shuffle]
                 and options.level_generation == ParaboxOptions.level_generation.option_randomize
         ):
             return ParaboxItemType.PROGRESSION
