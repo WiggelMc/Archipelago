@@ -49,6 +49,27 @@ class ParaboxItemInfoDefinitions:
     possess_wall = ParaboxItemInfo("Possess Wall", 27)
     possess_box = ParaboxItemInfo("Possess Box", 28)
 
+    # TODO: Goal In Box
+    # TODO: Box Sizes
+    # TODO: Preset Boxes
+
+    # TODO: Keys (Maybe programmatically [other class / ...])
+    # TODO: Level Selects (Maybe programmatically) [Type is option dependent, PROGRESSION / USEFUL]
+
+    slowness_trap = ParaboxItemInfo("Slowness Trap", 40, ParaboxItemType.TRAP)
+    zoom_in_trap = ParaboxItemInfo("Zoom In Trap", 41, ParaboxItemType.TRAP)
+    zoom_out_trap = ParaboxItemInfo("Zoom Out Trap", 42, ParaboxItemType.TRAP)
+    ascii_trap = ParaboxItemInfo("Ascii Trap", 43, ParaboxItemType.TRAP)
+    Rainbow_trap = ParaboxItemInfo("Rainbow Trap", 44, ParaboxItemType.TRAP)
+    control_trap = ParaboxItemInfo("Control Trap", 45, ParaboxItemType.TRAP)
+
+    info = ParaboxItemInfo("Info", 46, ParaboxItemType.USEFUL)
+    puzzle_skip = ParaboxItemInfo("Puzzle Skip", 47, ParaboxItemType.USEFUL)
+    puzzle_help = ParaboxItemInfo("Puzzle Help", 48, ParaboxItemType.USEFUL)
+    open_puzzle_help = ParaboxItemInfo("Open Puzzle Help", 49, ParaboxItemType.USEFUL)
+    center_puzzle_help = ParaboxItemInfo("Center Puzzle Help", 50, ParaboxItemType.USEFUL)
+    exit_puzzle_help = ParaboxItemInfo("Exit Puzzle Help", 51, ParaboxItemType.USEFUL)
+
 
 def get_item_name_to_id():
     def create_pairs():
@@ -60,5 +81,7 @@ def get_item_name_to_id():
     return dict(create_pairs())
 
 
+item_name_to_id = get_item_name_to_id()
+
 if __name__ == '__main__':
-    print(get_item_name_to_id())
+    print("\n".join([str(v) + " "*(4 - len(str(v))) + k for k, v in get_item_name_to_id().items()]))
