@@ -1,5 +1,7 @@
+import functools
+from abc import abstractmethod
 from enum import Enum
-from typing import NamedTuple
+from typing import NamedTuple, Any
 
 
 class ParaboxItemType(Enum):
@@ -53,9 +55,6 @@ class ParaboxItemInfoDefinitions:
     # TODO: Box Sizes
     # TODO: Preset Boxes
 
-    # TODO: Keys (Maybe programmatically [other class / ...])
-    # TODO: Level Selects (Maybe programmatically) [Type is option dependent, PROGRESSION / USEFUL]
-
     slowness_trap = ParaboxItemInfo("Slowness Trap", 40, ParaboxItemType.TRAP)
     zoom_in_trap = ParaboxItemInfo("Zoom In Trap", 41, ParaboxItemType.TRAP)
     zoom_out_trap = ParaboxItemInfo("Zoom Out Trap", 42, ParaboxItemType.TRAP)
@@ -71,17 +70,142 @@ class ParaboxItemInfoDefinitions:
     exit_puzzle_help = ParaboxItemInfo("Exit Puzzle Help", 51, ParaboxItemType.USEFUL)
 
 
+class ParaboxItemGenerator:
+    start_id: int
+
+    def __init__(self, start_id):
+        self.start_id = start_id
+
+    @property
+    @abstractmethod
+    def items(self) -> list[ParaboxItemInfo]:
+        pass
+
+
+class KeyDefinition(NamedTuple):
+    name: str
+    symbol: str
+    id: int
+
+
+class KeyItemDefinition(NamedTuple):
+    name: str
+    symbol: str
+    id: int
+
+
+key_definitions = [
+    KeyDefinition("Alpha", "α", 1),
+    KeyDefinition("Beta", "β", 2),
+    KeyDefinition("Gamma", "γ", 3),
+    KeyDefinition("Delta", "δ", 4),
+    KeyDefinition("Zeta", "ζ", 5),
+    KeyDefinition("Eta", "η", 6),
+    KeyDefinition("Theta", "θ", 7),
+    KeyDefinition("Iota", "ι", 8),
+    KeyDefinition("Kappa", "κ", 9),
+    KeyDefinition("Lambda", "λ", 10),
+    KeyDefinition("Mu", "μ", 11),
+    KeyDefinition("Nu", "ν", 12),
+    KeyDefinition("Xi", "ξ", 13),
+    KeyDefinition("Omikron", "ο", 14),
+    KeyDefinition("Pi", "π", 15),
+    KeyDefinition("Rho", "ρ", 16),
+    KeyDefinition("Sigma", "σ", 17),
+    KeyDefinition("Tau", "τ", 18),
+    KeyDefinition("Upsilon", "υ", 19),
+    KeyDefinition("Phi", "φ", 20),
+    KeyDefinition("Chi", "χ", 21),
+    KeyDefinition("Psi", "ψ", 23),
+    KeyDefinition("Omega", "ω", 24)
+]
+
+world_name_definitions = [
+    "Intro",
+    "Enter",
+    "Empty",
+    "Eat",
+    "Reference",
+    "Swap",
+    "Center",
+    "Clone",
+    "Transfer",
+    "Open",
+    "Flip",
+    "Cycle",
+    "Player",
+    "Possess",
+    "Wall",
+    "Infinite Exit",
+    "Infinite Enter",
+    "Multi Infinite",
+    "Reception",
+    "Challenge",
+    "Gallery",
+    "Appendix",
+    "Appendix: Priority",
+    "Appendix: Extrude",
+    "Appendix: Inner Push"
+]
+
+
+class KeyItemGenerator(ParaboxItemGenerator):
+    def __init__(self, start_id):
+        super().__init__(start_id)
+
+    @functools.cached_property
+    def items(self) -> list[ParaboxItemInfo]:
+        return [ParaboxItemInfo(k.name, k.id) for k in self.definitions]
+
+    @functools.cached_property
+    def definitions(self) -> list[KeyItemDefinition]:
+        return [KeyItemDefinition(f"{k.name} Key", k.symbol, self.start_id + k.id) for k in key_definitions]
+
+
+class LevelSelectItemGenerator(ParaboxItemGenerator):
+    def __init__(self, start_id):
+        super().__init__(start_id)
+
+    @functools.cached_property
+    def items(self) -> list[ParaboxItemInfo]:
+        return [ParaboxItemInfo(
+            f"Level Select ({name})",
+            self.start_id + idx,
+            ParaboxItemType.USEFUL
+        ) for idx, name in enumerate(world_name_definitions)]
+
+
+class ParaboxItemInfoGeneratorDefinitions:
+    keys = KeyItemGenerator(100)
+    level_selects = LevelSelectItemGenerator(200)
+
+
 def get_item_name_to_id():
     def create_pairs():
         value: ParaboxItemInfo
         for attr, value in ParaboxItemInfoDefinitions.__dict__.items():
             if not attr.startswith("__"):
                 yield value.name, value.id
+        generator: ParaboxItemGenerator
+        for attr, generator in ParaboxItemInfoGeneratorDefinitions.__dict__.items():
+            if not attr.startswith("__"):
+                yield from [(v.name, v.id) for v in generator.items]
 
     return dict(create_pairs())
 
 
 item_name_to_id = get_item_name_to_id()
+key_name_to_symbol = {k.name: k.symbol for k in key_definitions}
+
+
+def main():
+    def print_dict(d: dict[Any, Any]):
+        print("\n".join([str(v) + " " * (6 - len(str(v))) + k for k, v in d.items()]))
+
+    print_dict(item_name_to_id)
+    print("\n" * 3)
+    print_dict(key_name_to_symbol)
+
 
 if __name__ == '__main__':
-    print("\n".join([str(v) + " "*(4 - len(str(v))) + k for k, v in get_item_name_to_id().items()]))
+    main()
