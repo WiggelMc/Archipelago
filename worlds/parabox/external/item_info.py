@@ -1,3 +1,4 @@
+from __future__ import annotations
 import functools
 from abc import abstractmethod
 from enum import Enum
@@ -10,13 +11,23 @@ class ParaboxItemType(Enum):
     TRAP = 3
 
 
+class ParaboxItemGroup(Enum):
+    pass
+
+
 class ParaboxItemInfo(NamedTuple):
     name: str
     id: int
     item_type: ParaboxItemType = ParaboxItemType.PROGRESSION
+    progressive_item: tuple[ParaboxItemInfo, int] | None = None  # TODO: move into subclass AND check type (not field)
+    single_item: ParaboxItemInfo | None = None                   # match item:
+    item_groups: list[ParaboxItemGroup] = []                     # case ParaboxProgressiveItemInfo(): pass
 
     def typed(self, item_type: ParaboxItemType):
         return ParaboxItemInfo(self.name, self.id, item_type)
+
+    def __hash__(self):
+        return hash((self.name, self.id))
 
 
 class ParaboxItemInfoDefinitions:
@@ -32,35 +43,36 @@ class ParaboxItemInfoDefinitions:
     one = ParaboxItemInfo("One", 10)
 
     recursion = ParaboxItemInfo("Recursion", 11)
-    progressive_recursion = ParaboxItemInfo("Progressive Recursion", 12)
+    progressive_recursion = ParaboxItemInfo("Progressive Recursion", 12, single_item=recursion)
 
     flip = ParaboxItemInfo("Flip", 13)
-    progressive_flip = ParaboxItemInfo("Progressive Flip", 14)
+    progressive_flip = ParaboxItemInfo("Progressive Flip", 14, single_item=flip)
 
     friend = ParaboxItemInfo("Friend", 15)
-    progressive_friend = ParaboxItemInfo("Progressive Friend", 16)
+    progressive_friend = ParaboxItemInfo("Progressive Friend", 16, single_item=friend)
 
     infinite_exit_block = ParaboxItemInfo("Infinite Exit", 17)
-    progressive_infinite_exit_block = ParaboxItemInfo("Progressive Infinite Exit", 18)
+    progressive_infinite_exit_block = ParaboxItemInfo("Progressive Infinite Exit", 18, single_item=infinite_exit_block)
 
     infinite_enter_block = ParaboxItemInfo("Infinite Enter", 19)
-    progressive_infinite_enter_block = ParaboxItemInfo("Progressive Infinite Enter", 20)
+    progressive_infinite_enter_block = ParaboxItemInfo("Progressive Infinite Enter", 20,
+                                                       single_item=infinite_enter_block)
 
     player = ParaboxItemInfo("Player", 21)
-    progressive_player = ParaboxItemInfo("Progressive Player", 22)
+    progressive_player = ParaboxItemInfo("Progressive Player", 22, single_item=player)
 
     undo = ParaboxItemInfo("Undo", 23)
-    progressive_undo = ParaboxItemInfo("Progressive Undo", 24)
+    progressive_undo = ParaboxItemInfo("Progressive Undo", 24, single_item=undo)
 
     possess = ParaboxItemInfo("Possess", 25)
-    progressive_possess = ParaboxItemInfo("Progressive Possess", 26)
-    possess_wall = ParaboxItemInfo("Possess Wall", 27)
-    possess_box = ParaboxItemInfo("Possess Box", 28)
+    progressive_possess = ParaboxItemInfo("Progressive Possess", 26, single_item=possess)
+    possess_wall = ParaboxItemInfo("Possess Wall", 27, progressive_item=(progressive_possess, 1))
+    possess_box = ParaboxItemInfo("Possess Box", 28, progressive_item=(progressive_possess, 2))
 
     nested_button = ParaboxItemInfo("Nested Button", 29)
-    progressive_nested_button = ParaboxItemInfo("Progressive Nested Button", 30)
-    nested_box_button = ParaboxItemInfo("Nested Box Button", 31)
-    nested_player_button = ParaboxItemInfo("Nested Player Button", 32)
+    progressive_nested_button = ParaboxItemInfo("Progressive Nested Button", 30, single_item=nested_button)
+    nested_box_button = ParaboxItemInfo("Nested Box Button", 31, progressive_item=(progressive_nested_button, 1))
+    nested_player_button = ParaboxItemInfo("Nested Player Button", 32, progressive_item=(progressive_nested_button, 2))
 
     slowness_trap = ParaboxItemInfo("Slowness Trap", 40, ParaboxItemType.TRAP)
     zoom_in_trap = ParaboxItemInfo("Zoom In Trap", 41, ParaboxItemType.TRAP)

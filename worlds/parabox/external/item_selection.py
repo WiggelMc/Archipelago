@@ -2,8 +2,7 @@ from abc import abstractmethod
 
 from item_info import ParaboxItemInfoDefinitions as Items, ParaboxItemType, ParaboxItemInfo
 from opt.logic_option_values import FixBanishmentValues
-from opt.option_base_values import ShuffleOptionValues, ShuffleProgressiveOptionValues, \
-    ShuffleProgressiveOrSeperateOptionValues
+from opt.option_base_values import ShuffleProgressiveOrSeperateOptionValues
 from opt.shuffle_option_values import ShuffleLevelSelectValues
 from opt.world_option_values import WorldGenerationValues, LevelGenerationValues
 from option_values import ParaboxOptionValues, option_values_from_dict
@@ -18,7 +17,7 @@ class ParaboxItemDataCreator:
 
 # noinspection PyUnusedLocal
 class ParaboxShuffleItemDataCreator(ParaboxItemDataCreator):
-    items_single: list[ParaboxItemInfo] = []
+    items: list[ParaboxItemInfo] = []
 
     @staticmethod
     @abstractmethod
@@ -26,84 +25,56 @@ class ParaboxShuffleItemDataCreator(ParaboxItemDataCreator):
         pass
 
     @classmethod
-    def get_items_single(cls, options: ParaboxOptionValues):
-        return cls.items_single
+    def get_items(cls, options: ParaboxOptionValues):
+        return cls.items
 
     @classmethod
-    def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
-        option = cls.get_option(options)
-        match option:
-            case ShuffleOptionValues.option_single:
-                return cls.get_items_single(options)
-            case _:
-                return []
-
-
-# noinspection PyUnusedLocal
-class ParaboxProgressiveShuffleItemDataCreator(ParaboxItemDataCreator):
-    items_single: list[ParaboxItemInfo] = []
-    items_progressive: list[ParaboxItemInfo] = []
-
-    @staticmethod
-    @abstractmethod
-    def get_option(options: ParaboxOptionValues) -> int:
-        pass
+    def modify_items(cls, item_list: list[ParaboxItemInfo], options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
+        return item_list
 
     @classmethod
     def get_items_single(cls, options: ParaboxOptionValues):
-        return cls.items_single
+        item_list = cls.get_items(options)
+        if not item_list:
+            return []
+        if item_list[0].progressive_item:
+            item_list = [item.progressive_item[0] for item in item_list]
+        if item_list[0].single_item:
+            item_list = [item.single_item for item in item_list]
+        return list(set(item_list))
 
     @classmethod
     def get_items_progressive(cls, options: ParaboxOptionValues):
-        return cls.items_progressive
-
-    @classmethod
-    def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
-        option = cls.get_option(options)
-        match option:
-            case ShuffleProgressiveOptionValues.option_single:
-                return cls.get_items_single(options)
-            case ShuffleProgressiveOptionValues.option_progressive:
-                return cls.get_items_progressive(options)
-            case _:
-                return []
-
-
-# noinspection PyUnusedLocal
-class ParaboxProgressiveOrSeperateShuffleItemDataCreator(ParaboxItemDataCreator):
-    items_single: list[ParaboxItemInfo] = []
-    items_progressive: list[ParaboxItemInfo] = []
-    items_seperate: list[ParaboxItemInfo] = []
-
-    @staticmethod
-    @abstractmethod
-    def get_option(options: ParaboxOptionValues) -> int:
-        pass
-
-    @classmethod
-    def get_items_single(cls, options: ParaboxOptionValues):
-        return cls.items_single
-
-    @classmethod
-    def get_items_progressive(cls, options: ParaboxOptionValues):
-        return cls.items_progressive
+        item_list = cls.get_items(options)
+        if not item_list:
+            return []
+        if item_list[0].progressive_item:
+            # noinspection PyTypeChecker
+            item_count: int = max([item.progressive_item[1] for item in item_list])
+            return [item_list[0].progressive_item[0]] * item_count
+        else:
+            return item_list
 
     @classmethod
     def get_items_seperate(cls, options: ParaboxOptionValues):
-        return cls.items_seperate
+        return cls.get_items(options)
 
     @classmethod
     def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
         option = cls.get_option(options)
-        match option:
-            case ShuffleProgressiveOrSeperateOptionValues.option_single:
-                return cls.get_items_single(options)
-            case ShuffleProgressiveOrSeperateOptionValues.option_progressive:
-                return cls.get_items_progressive(options)
-            case ShuffleProgressiveOrSeperateOptionValues.option_seperate:
-                return cls.get_items_seperate(options)
-            case _:
-                return []
+
+        def create_items_unmodified():
+            match option:
+                case ShuffleProgressiveOrSeperateOptionValues.option_single:
+                    return cls.get_items_single(options)
+                case ShuffleProgressiveOrSeperateOptionValues.option_progressive:
+                    return cls.get_items_progressive(options)
+                case ShuffleProgressiveOrSeperateOptionValues.option_seperate:
+                    return cls.get_items_seperate(options)
+                case _:
+                    return []
+
+        return cls.modify_items(create_items_unmodified(), options)
 
 
 class PriorityItemDataCreator(ParaboxShuffleItemDataCreator):
@@ -111,10 +82,10 @@ class PriorityItemDataCreator(ParaboxShuffleItemDataCreator):
     def get_option(options: ParaboxOptionValues) -> int:
         return options.shuffle_priority
 
-    items_single = [Items.priority]
+    items = [Items.priority]
 
 
-class UndoItemDataCreator(ParaboxProgressiveShuffleItemDataCreator):
+class UndoItemDataCreator(ParaboxShuffleItemDataCreator):
     @staticmethod
     def get_option(options: ParaboxOptionValues) -> int:
         return options.shuffle_undo
@@ -124,83 +95,81 @@ class UndoItemDataCreator(ParaboxProgressiveShuffleItemDataCreator):
         if (
                 options.shuffle_level_select != ShuffleLevelSelectValues.option_disabled
                 and options.fix_banishment == FixBanishmentValues.option_vanilla
-                and options.world_generation not in [
-                    WorldGenerationValues.option_vanilla, WorldGenerationValues.option_shuffle]
+                and options.world_generation not in [WorldGenerationValues.option_vanilla,
+                                                     WorldGenerationValues.option_shuffle]
                 and options.level_generation == LevelGenerationValues.option_randomize
         ):
             return ParaboxItemType.PROGRESSION
         else:
             return ParaboxItemType.USEFUL
 
-    @classmethod
-    def get_items_single(cls, options: ParaboxOptionValues):
-        undo_type = cls.get_undo_type(options)
-        return [Items.undo.typed(undo_type)] * (1 + options.undo_extra_copy_count)
+    items = [Items.progressive_undo] * 2
 
     @classmethod
-    def get_items_progressive(cls, options: ParaboxOptionValues):
+    def modify_items(cls, item_list: list[ParaboxItemInfo], options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
+        if not item_list:
+            return item_list
         undo_type = cls.get_undo_type(options)
-        return [Items.progressive_undo.typed(undo_type)] * (2 + options.undo_extra_copy_count)
+        item_list = [item.typed(undo_type) for item in item_list]
+        return item_list + [item_list[0]] * options.undo_extra_copy_count
 
 
-class PossessItemDataCreator(ParaboxProgressiveOrSeperateShuffleItemDataCreator):
+class PossessItemDataCreator(ParaboxShuffleItemDataCreator):
     @staticmethod
     def get_option(options: ParaboxOptionValues) -> int:
         return options.shuffle_possess
 
-    items_single = [Items.possess]
-    items_progressive = [Items.progressive_possess] * 2
-    items_seperate = [Items.possess_box, Items.possess_wall]
+    items = [Items.possess_box, Items.possess_wall]
 
 
 if __name__ == '__main__':
     print("Test")
     testOptions = {
-        "goal": 0, 
-        "goal_unlock": 0, 
-        "goal_unlock_world_count": 0, 
-        "level_generation": 0, 
-        "world_generation": 0, 
-        "world_door_keys": 0, 
-        "world_door_key_group_count": 0, 
-        "world_count": 0, 
+        "goal": 0,
+        "goal_unlock": 0,
+        "goal_unlock_world_count": 0,
+        "level_generation": 2,
+        "world_generation": 2,
+        "world_door_keys": 0,
+        "world_door_key_group_count": 0,
+        "world_count": 0,
 
         # Shuffle Options
-        "shuffle_priority": 0, 
-        "shuffle_extrude": 0, 
-        "shuffle_inner_push": 0, 
-        "shuffle_block": 0, 
-        "shuffle_level_select": 0, 
-        "shuffle_clone": 0, 
-        "shuffle_open": 0, 
-        "shuffle_even": 0, 
-        "shuffle_oblong": 0, 
-        "shuffle_one": 0, 
+        "shuffle_priority": 2,
+        "shuffle_extrude": 0,
+        "shuffle_inner_push": 0,
+        "shuffle_block": 0,
+        "shuffle_level_select": 3,
+        "shuffle_clone": 0,
+        "shuffle_open": 0,
+        "shuffle_even": 0,
+        "shuffle_oblong": 0,
+        "shuffle_one": 0,
 
-        "shuffle_recursion": 0, 
-        "shuffle_flip": 0, 
-        "shuffle_friend": 0, 
-        "shuffle_infinite_exit_block": 0, 
-        "shuffle_infinite_enter_block": 0, 
-        "shuffle_player": 0, 
-        "shuffle_undo": 0, 
-        "undo_extra_copy_count": 0, 
+        "shuffle_recursion": 0,
+        "shuffle_flip": 0,
+        "shuffle_friend": 0,
+        "shuffle_infinite_exit_block": 0,
+        "shuffle_infinite_enter_block": 0,
+        "shuffle_player": 0,
+        "shuffle_undo": 3,
+        "undo_extra_copy_count": 1,
 
-        "shuffle_box_sizes": 0, 
-        "shuffle_nested_goal": 0, 
-        "shuffle_possess": 4,
+        "shuffle_box_sizes": 0,
+        "shuffle_nested_goal": 0,
+        "shuffle_possess": 3,
 
         # Box Options
-        "box_types": 0, 
+        "box_types": 0,
 
         # Logic Options
-        "fix_banishment": 0, 
+        "fix_banishment": 0,
 
         # Extra Options
-        "priority_order": 0, 
-        "max_friend_count": 0, 
-        "max_infinite_exit_level": 0, 
-        "max_infinite_enter_level": 0, 
+        "priority_order": 0,
+        "max_friend_count": 0,
+        "max_infinite_exit_level": 0,
+        "max_infinite_enter_level": 0,
     }
     testOptionsDataclass = option_values_from_dict(testOptions)
-    print(PossessItemDataCreator.create_items(testOptionsDataclass))
+    print([(item.name, item.item_type.name) for item in PossessItemDataCreator.create_items(testOptionsDataclass)])
