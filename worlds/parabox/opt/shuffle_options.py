@@ -1,4 +1,5 @@
 from Options import Choice, Range
+from worlds.parabox.external.decorators.docstrings import inherit_docstring
 from worlds.parabox.external.opt.shuffle_option_values import ShufflePriorityValues, ShuffleExtrudeValues, \
     ShuffleInnerPushValues, ShuffleBlockValues, ShuffleLevelSelectValues, ShuffleCloneValues, ShuffleOpenValues, \
     ShuffleEvenValues, ShuffleOblongValues, ShuffleOneValues, ShuffleRecursionValues, ShuffleFlipValues, \
@@ -6,85 +7,106 @@ from worlds.parabox.external.opt.shuffle_option_values import ShufflePriorityVal
     ShuffleUndoValues, UndoExtraCopyCountValues, ShuffleBoxSizesValues, ShuffleNestedGoalValues, ShufflePossessValues
 
 
+@inherit_docstring
 class ShufflePriority(ShufflePriorityValues, Choice):
-    __doc__ = ShufflePriorityValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleExtrude(ShuffleExtrudeValues, Choice):
-    __doc__ = ShuffleExtrudeValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleInnerPush(ShuffleInnerPushValues, Choice):
-    __doc__ = ShuffleInnerPushValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleBlock(ShuffleBlockValues, Choice):
-    __doc__ = ShuffleBlockValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleLevelSelect(ShuffleLevelSelectValues, Choice):
-    __doc__ = ShuffleLevelSelectValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleClone(ShuffleCloneValues, Choice):
-    __doc__ = ShuffleCloneValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleOpen(ShuffleOpenValues, Choice):
-    __doc__ = ShuffleOpenValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleEven(ShuffleEvenValues, Choice):
-    __doc__ = ShuffleEvenValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleOblong(ShuffleOblongValues, Choice):
-    __doc__ = ShuffleOblongValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleOne(ShuffleOneValues, Choice):
-    __doc__ = ShuffleOneValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleRecursion(ShuffleRecursionValues, Choice):
-    __doc__ = ShuffleRecursionValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleFlip(ShuffleFlipValues, Choice):
-    __doc__ = ShuffleFlipValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleFriend(ShuffleFriendValues, Choice):
-    __doc__ = ShuffleFriendValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleInfiniteExitBlock(ShuffleInfiniteExitBlockValues, Choice):
-    __doc__ = ShuffleInfiniteExitBlockValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleInfiniteEnterBlock(ShuffleInfiniteEnterBlockValues, Choice):
-    __doc__ = ShuffleInfiniteEnterBlockValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShufflePlayer(ShufflePlayerValues, Choice):
-    __doc__ = ShufflePlayerValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleUndo(ShuffleUndoValues, Choice):
-    __doc__ = ShuffleUndoValues.__doc__
+    pass
 
 
+@inherit_docstring
 class UndoExtraCopyCount(UndoExtraCopyCountValues, Range):
-    __doc__ = UndoExtraCopyCountValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleBoxSizes(ShuffleBoxSizesValues, Choice):
-    __doc__ = ShuffleBoxSizesValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShuffleNestedGoal(ShuffleNestedGoalValues, Choice):
-    __doc__ = ShuffleNestedGoalValues.__doc__
+    pass
 
 
+@inherit_docstring
 class ShufflePossess(ShufflePossessValues, Choice):
-    __doc__ = ShufflePossessValues.__doc__
+    pass

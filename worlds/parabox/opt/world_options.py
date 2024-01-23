@@ -1,40 +1,50 @@
 from Options import Choice, Range
+from worlds.parabox.external.decorators.docstrings import inherit_docstring
 from worlds.parabox.external.opt.world_option_values import GoalValues, GoalUnlockValues, GoalUnlockWorldCountValues, \
     LevelGenerationValues, WorldGenerationValues, WorldDoorKeysValues, WorldDoorKeyGroupCountValues, WorldCountValues, \
     WorldSelectionBiasValues
 
 
+@inherit_docstring
 class Goal(GoalValues, Choice):
-    __doc__ = GoalValues.__doc__
+    pass
 
 
+@inherit_docstring
 class GoalUnlock(GoalUnlockValues, Choice):
-    __doc__ = GoalUnlockValues.__doc__
+    pass
 
 
+@inherit_docstring
 class GoalUnlockWorldCount(GoalUnlockWorldCountValues, Range):
-    __doc__ = GoalUnlockWorldCountValues.__doc__
+    pass
 
 
+@inherit_docstring
 class LevelGeneration(LevelGenerationValues, Choice):
-    __doc__ = LevelGenerationValues.__doc__
+    pass
 
 
+@inherit_docstring
 class WorldGeneration(WorldGenerationValues, Choice):
-    __doc__ = WorldGenerationValues.__doc__
+    pass
 
 
+@inherit_docstring
 class WorldDoorKeys(WorldDoorKeysValues, Choice):
-    __doc__ = WorldDoorKeysValues.__doc__
+    pass
 
 
+@inherit_docstring
 class WorldDoorKeyGroupCount(WorldDoorKeyGroupCountValues, Range):
-    __doc__ = WorldDoorKeyGroupCountValues.__doc__
+    pass
 
 
+@inherit_docstring
 class WorldCount(WorldCountValues, Range):
-    __doc__ = WorldCountValues.__doc__
+    pass
 
 
+@inherit_docstring
 class WorldSelectionBias(WorldSelectionBiasValues, Range):
-    __doc__ = WorldSelectionBiasValues.__doc__
+    pass
