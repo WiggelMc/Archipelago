@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import abc
 import dataclasses
 import functools
 from abc import abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
+
+from option_values import ParaboxOptionValues
 
 
 class ParaboxItemType(Enum):
@@ -35,13 +38,54 @@ class ParaboxSingleItemInfo(ParaboxItemInfo):
 
 @dataclass(frozen=True)
 class ParaboxProgressiveItemInfo(ParaboxItemInfo):
-    single_item: ParaboxSingleItemInfo = dataclasses.field(kw_only=True)
+    single_item: ParaboxSingleItemInfo = dataclasses.field(kw_only=True, default=None)
 
 
 @dataclass(frozen=True)
 class ParaboxSeperateItemInfo(ParaboxItemInfo):
-    progressive_item: ParaboxProgressiveItemInfo = dataclasses.field(kw_only=True)
+    progressive_item: ParaboxProgressiveItemInfo = dataclasses.field(kw_only=True, default=None)
     n: int = dataclasses.field(kw_only=True)
+
+
+class ItemInfoGroupAssembly(abc.ABCMeta):
+    def __new__(cls, name, bases, attrs):
+        seperate_items = attrs["seperate_items"] = {}
+        prefix = "seperate_"
+        seperate = {name[len(prefix):].lower(): item for name, item in attrs.items() if
+                    name.startswith(prefix) and isinstance(item, ParaboxSeperateItemInfo)}
+        seperate_items.update(seperate)
+        return super(ItemInfoGroupAssembly, cls).__new__(cls, name, bases, attrs)
+
+
+class ItemInfoGroup:
+    # superclass
+    # @property items: list[ParaboxItemDefinition]
+    # def get_pool_items(options) to get items in pool for options
+    # def post_get_pool_items(options, items) hook to modify items
+    # item_selection will not be needed anymore
+    # some way to get requirement for current options (eg. opt.progressive, sep_box -> prog_2)
+    # make special subclass for Requirement (eg. ReqSingleItem(SingleItem, Req))
+    # Requirements can be used by the world for levels
+
+    @classmethod
+    @abstractmethod
+    def get_option(cls, options: ParaboxOptionValues) -> int:
+        pass
+
+
+class SingleItemInfoGroup(ItemInfoGroup, abc.ABC):
+    single: ParaboxSingleItemInfo
+
+
+class ProgressiveItemInfoGroup(ItemInfoGroup, abc.ABC):
+    single: ParaboxSingleItemInfo
+    progressive: ParaboxProgressiveItemInfo
+
+
+class SeperateItemInfoGroup(ItemInfoGroup, abc.ABC, metaclass=ItemInfoGroupAssembly):
+    single: ParaboxSingleItemInfo
+    progressive: ParaboxProgressiveItemInfo
+    seperate_items: dict[str, ParaboxSeperateItemInfo]
 
 
 class ParaboxItemInfoDefinitions:
@@ -139,6 +183,17 @@ class ParaboxItemInfoDefinitions:
     bbi_full_box_5 = ParaboxItemInfo("BBI Full Box (5)", 84)
     bxi_full_box_5 = ParaboxItemInfo("BXI Full Box (5)", 85)
     # EXPERIMENTAL #
+
+
+class Possess(SeperateItemInfoGroup):
+    @classmethod
+    def get_option(cls, options: ParaboxOptionValues) -> int:
+        return options.shuffle_possess
+
+    single = ParaboxSingleItemInfo("Possess", 25)
+    progressive = ParaboxProgressiveItemInfo("Progressive Possess", 26)
+    seperate_wall = ParaboxSeperateItemInfo("Possess Wall", 27, n=1)
+    seperate_box = ParaboxSeperateItemInfo("Possess Box", 28, n=2)
 
 
 @dataclass(frozen=True)
@@ -271,6 +326,8 @@ def main():
     print_dict(item_name_to_id)
     print("\n" * 3)
     print_dict(key_name_to_symbol)
+    print("\n" * 3)
+    print_dict(Possess.seperate_items)
 
 
 if __name__ == '__main__':
