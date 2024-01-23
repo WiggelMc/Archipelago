@@ -49,10 +49,14 @@ class ParaboxSeperateItemInfo(ParaboxItemInfo):
 
 class ItemInfoGroupAssembly(abc.ABCMeta):
     def __new__(cls, name, bases, attrs):
-        seperate_items = attrs["seperate_items"] = {}
         prefix = "seperate_"
+        field_name = "seperate_items"
+        seperate_items = attrs[field_name] = {}
+
         seperate = {name[len(prefix):].lower(): item for name, item in attrs.items() if
-                    name.startswith(prefix) and isinstance(item, ParaboxSeperateItemInfo)}
+                    name.startswith(prefix)
+                    and name != field_name
+                    and isinstance(item, ParaboxSeperateItemInfo)}
         seperate_items.update(seperate)
         return super(ItemInfoGroupAssembly, cls).__new__(cls, name, bases, attrs)
 
@@ -65,6 +69,8 @@ class ItemInfoGroup:
     # item_selection will not be needed anymore
     # some way to get requirement for current options (eg. opt.progressive, sep_box -> prog_2)
     # make special subclass for Requirement (eg. ReqSingleItem(SingleItem, Req))
+    # one class contains all Items (getItems(options) and getAllItems)
+    # Requirements are manually referenced by the world generators
     # Requirements can be used by the world for levels
 
     @classmethod
