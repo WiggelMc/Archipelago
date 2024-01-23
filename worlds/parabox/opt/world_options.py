@@ -1,6 +1,7 @@
 from Options import Choice, Range
 from worlds.parabox.external.opt.world_option_values import GoalValues, GoalUnlockValues, GoalUnlockWorldCountValues, \
-    LevelGenerationValues, WorldGenerationValues, WorldDoorKeysValues, WorldDoorKeyGroupCountValues, WorldCountValues
+    LevelGenerationValues, WorldGenerationValues, WorldDoorKeysValues, WorldDoorKeyGroupCountValues, WorldCountValues, \
+    WorldSelectionBiasValues
 
 
 class Goal(GoalValues, Choice):
@@ -33,3 +34,7 @@ class WorldDoorKeyGroupCount(WorldDoorKeyGroupCountValues, Range):
 
 class WorldCount(WorldCountValues, Range):
     __doc__ = WorldCountValues.__doc__
+
+
+class WorldSelectionBias(WorldSelectionBiasValues, Range):
+    __doc__ = WorldSelectionBiasValues.__doc__

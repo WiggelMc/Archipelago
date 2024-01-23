@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
-from item_info import ParaboxItemInfoDefinitions as Items, ParaboxItemType, ParaboxItemInfo
+from item_info import ParaboxItemInfoDefinitions as Items, ParaboxItemType, ParaboxItemInfo, ParaboxSingleItemInfo, \
+    ParaboxProgressiveItemInfo, ParaboxSeperateItemInfo
 from opt.logic_option_values import FixBanishmentValues
 from opt.option_base_values import ShuffleProgressiveOrSeperateOptionValues
 from opt.shuffle_option_values import ShuffleLevelSelectValues
@@ -34,30 +35,49 @@ class ParaboxShuffleItemDataCreator(ParaboxItemDataCreator):
 
     @classmethod
     def get_items_single(cls, options: ParaboxOptionValues):
-        item_list = cls.get_items(options)
+        item_list: list[ParaboxItemInfo] = cls.get_items(options)
         if not item_list:
             return []
-        if item_list[0].progressive_item:
-            item_list = [item.progressive_item[0] for item in item_list]
-        if item_list[0].single_item:
-            item_list = [item.single_item for item in item_list]
-        return list(set(item_list))
+        match item_list[0]:
+            case ParaboxSingleItemInfo():
+                item_list: list[ParaboxSingleItemInfo]
+                return list(set(item_list))
+            case ParaboxProgressiveItemInfo():
+                item_list: list[ParaboxProgressiveItemInfo]
+                return list(set([item.single_item for item in item_list]))
+            case ParaboxSeperateItemInfo():
+                item_list: list[ParaboxSeperateItemInfo]
+                return list(set([item.progressive_item.single_item for item in item_list]))
+            case _:
+                raise Exception(f"Invalid Item Type {type(item_list[0])} for list {item_list}")
 
     @classmethod
     def get_items_progressive(cls, options: ParaboxOptionValues):
-        item_list = cls.get_items(options)
+        item_list: list[ParaboxItemInfo] = cls.get_items(options)
         if not item_list:
             return []
-        if item_list[0].progressive_item:
-            # noinspection PyTypeChecker
-            item_count: int = max([item.progressive_item[1] for item in item_list])
-            return [item_list[0].progressive_item[0]] * item_count
-        else:
-            return item_list
+        match item_list[0]:
+            case ParaboxProgressiveItemInfo():
+                item_list: list[ParaboxProgressiveItemInfo]
+                return item_list
+            case ParaboxSeperateItemInfo():
+                item_list: list[ParaboxSeperateItemInfo]
+                item_count = max([item.n for item in item_list])
+                return [item_list[0].progressive_item] * item_count
+            case _:
+                raise Exception(f"Invalid Item Type {type(item_list[0])} for list {item_list}")
 
     @classmethod
     def get_items_seperate(cls, options: ParaboxOptionValues):
-        return cls.get_items(options)
+        item_list: list[ParaboxItemInfo] = cls.get_items(options)
+        if not item_list:
+            return []
+        match item_list[0]:
+            case ParaboxSeperateItemInfo():
+                item_list: list[ParaboxSeperateItemInfo]
+                return item_list
+            case _:
+                raise Exception(f"Invalid Item Type {type(item_list[0])} for list {item_list}")
 
     @classmethod
     def create_items(cls, options: ParaboxOptionValues) -> list[ParaboxItemInfo]:
@@ -157,7 +177,7 @@ if __name__ == '__main__':
 
         "shuffle_box_sizes": 0,
         "shuffle_nested_goal": 0,
-        "shuffle_possess": 3,
+        "shuffle_possess": 2,
 
         # Box Options
         "box_types": 0,

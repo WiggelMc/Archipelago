@@ -1,8 +1,11 @@
 from __future__ import annotations
+
+import dataclasses
 import functools
 from abc import abstractmethod
+from dataclasses import dataclass
 from enum import Enum
-from typing import NamedTuple, Any
+from typing import Any
 
 
 class ParaboxItemType(Enum):
@@ -15,19 +18,30 @@ class ParaboxItemGroup(Enum):
     pass
 
 
-class ParaboxItemInfo(NamedTuple):
+@dataclass(frozen=True)
+class ParaboxItemInfo:
     name: str
     id: int
     item_type: ParaboxItemType = ParaboxItemType.PROGRESSION
-    progressive_item: tuple[ParaboxItemInfo, int] | None = None  # TODO: move into subclass AND check type (not field)
-    single_item: ParaboxItemInfo | None = None                   # match item:
-    item_groups: list[ParaboxItemGroup] = []                     # case ParaboxProgressiveItemInfo(): pass
 
     def typed(self, item_type: ParaboxItemType):
-        return ParaboxItemInfo(self.name, self.id, item_type)
+        return dataclasses.replace(self, item_type=item_type)
 
-    def __hash__(self):
-        return hash((self.name, self.id))
+
+@dataclass(frozen=True)
+class ParaboxSingleItemInfo(ParaboxItemInfo):
+    pass
+
+
+@dataclass(frozen=True)
+class ParaboxProgressiveItemInfo(ParaboxItemInfo):
+    single_item: ParaboxSingleItemInfo = dataclasses.field(kw_only=True)
+
+
+@dataclass(frozen=True)
+class ParaboxSeperateItemInfo(ParaboxItemInfo):
+    progressive_item: ParaboxProgressiveItemInfo = dataclasses.field(kw_only=True)
+    n: int = dataclasses.field(kw_only=True)
 
 
 class ParaboxItemInfoDefinitions:
@@ -42,37 +56,40 @@ class ParaboxItemInfoDefinitions:
     oblong = ParaboxItemInfo("Oblong", 9)
     one = ParaboxItemInfo("One", 10)
 
-    recursion = ParaboxItemInfo("Recursion", 11)
-    progressive_recursion = ParaboxItemInfo("Progressive Recursion", 12, single_item=recursion)
+    recursion = ParaboxSingleItemInfo("Recursion", 11)
+    progressive_recursion = ParaboxProgressiveItemInfo("Progressive Recursion", 12, single_item=recursion)
 
-    flip = ParaboxItemInfo("Flip", 13)
-    progressive_flip = ParaboxItemInfo("Progressive Flip", 14, single_item=flip)
+    flip = ParaboxSingleItemInfo("Flip", 13)
+    progressive_flip = ParaboxProgressiveItemInfo("Progressive Flip", 14, single_item=flip)
 
-    friend = ParaboxItemInfo("Friend", 15)
-    progressive_friend = ParaboxItemInfo("Progressive Friend", 16, single_item=friend)
+    friend = ParaboxSingleItemInfo("Friend", 15)
+    progressive_friend = ParaboxProgressiveItemInfo("Progressive Friend", 16, single_item=friend)
 
-    infinite_exit_block = ParaboxItemInfo("Infinite Exit", 17)
-    progressive_infinite_exit_block = ParaboxItemInfo("Progressive Infinite Exit", 18, single_item=infinite_exit_block)
+    infinite_exit_block = ParaboxSingleItemInfo("Infinite Exit", 17)
+    progressive_infinite_exit_block = ParaboxProgressiveItemInfo("Progressive Infinite Exit", 18,
+                                                                 single_item=infinite_exit_block)
 
-    infinite_enter_block = ParaboxItemInfo("Infinite Enter", 19)
-    progressive_infinite_enter_block = ParaboxItemInfo("Progressive Infinite Enter", 20,
-                                                       single_item=infinite_enter_block)
+    infinite_enter_block = ParaboxSingleItemInfo("Infinite Enter", 19)
+    progressive_infinite_enter_block = ParaboxProgressiveItemInfo("Progressive Infinite Enter", 20,
+                                                                  single_item=infinite_enter_block)
 
-    player = ParaboxItemInfo("Player", 21)
-    progressive_player = ParaboxItemInfo("Progressive Player", 22, single_item=player)
+    player = ParaboxSingleItemInfo("Player", 21)
+    progressive_player = ParaboxProgressiveItemInfo("Progressive Player", 22, single_item=player)
 
-    undo = ParaboxItemInfo("Undo", 23)
-    progressive_undo = ParaboxItemInfo("Progressive Undo", 24, single_item=undo)
+    undo = ParaboxSingleItemInfo("Undo", 23)
+    progressive_undo = ParaboxProgressiveItemInfo("Progressive Undo", 24, single_item=undo)
 
-    possess = ParaboxItemInfo("Possess", 25)
-    progressive_possess = ParaboxItemInfo("Progressive Possess", 26, single_item=possess)
-    possess_wall = ParaboxItemInfo("Possess Wall", 27, progressive_item=(progressive_possess, 1))
-    possess_box = ParaboxItemInfo("Possess Box", 28, progressive_item=(progressive_possess, 2))
+    possess = ParaboxSingleItemInfo("Possess", 25)
+    progressive_possess = ParaboxProgressiveItemInfo("Progressive Possess", 26, single_item=possess)
+    possess_wall = ParaboxSeperateItemInfo("Possess Wall", 27, progressive_item=progressive_possess, n=1)
+    possess_box = ParaboxSeperateItemInfo("Possess Box", 28, progressive_item=progressive_possess, n=2)
 
-    nested_button = ParaboxItemInfo("Nested Button", 29)
-    progressive_nested_button = ParaboxItemInfo("Progressive Nested Button", 30, single_item=nested_button)
-    nested_box_button = ParaboxItemInfo("Nested Box Button", 31, progressive_item=(progressive_nested_button, 1))
-    nested_player_button = ParaboxItemInfo("Nested Player Button", 32, progressive_item=(progressive_nested_button, 2))
+    nested_button = ParaboxSingleItemInfo("Nested Button", 29)
+    progressive_nested_button = ParaboxProgressiveItemInfo("Progressive Nested Button", 30, single_item=nested_button)
+    nested_box_button = ParaboxSeperateItemInfo("Nested Box Button", 31,
+                                                progressive_item=progressive_nested_button, n=1)
+    nested_player_button = ParaboxSeperateItemInfo("Nested Player Button", 32,
+                                                   progressive_item=progressive_nested_button, n=2)
 
     slowness_trap = ParaboxItemInfo("Slowness Trap", 40, ParaboxItemType.TRAP)
     zoom_in_trap = ParaboxItemInfo("Zoom In Trap", 41, ParaboxItemType.TRAP)
@@ -124,11 +141,9 @@ class ParaboxItemInfoDefinitions:
     # EXPERIMENTAL #
 
 
+@dataclass(frozen=True)
 class ParaboxItemGenerator:
     start_id: int
-
-    def __init__(self, start_id):
-        self.start_id = start_id
 
     @property
     @abstractmethod
@@ -136,16 +151,16 @@ class ParaboxItemGenerator:
         pass
 
 
-class KeyDefinition(NamedTuple):
+@dataclass(frozen=True)
+class KeyDefinition:
     name: str
     symbol: str
     id: int
 
 
-class KeyItemDefinition(NamedTuple):
-    name: str
-    symbol: str
-    id: int
+@dataclass(frozen=True)
+class KeyItemDefinition(KeyDefinition):
+    pass
 
 
 key_definitions = [
@@ -203,10 +218,8 @@ world_name_definitions = [
 ]
 
 
+@dataclass(frozen=True)
 class KeyItemGenerator(ParaboxItemGenerator):
-    def __init__(self, start_id):
-        super().__init__(start_id)
-
     @functools.cached_property
     def items(self) -> list[ParaboxItemInfo]:
         return [ParaboxItemInfo(k.name, k.id) for k in self.definitions]
@@ -216,10 +229,8 @@ class KeyItemGenerator(ParaboxItemGenerator):
         return [KeyItemDefinition(f"{k.name} Key", k.symbol, self.start_id + k.id) for k in key_definitions]
 
 
+@dataclass(frozen=True)
 class LevelSelectItemGenerator(ParaboxItemGenerator):
-    def __init__(self, start_id):
-        super().__init__(start_id)
-
     @functools.cached_property
     def items(self) -> list[ParaboxItemInfo]:
         return [ParaboxItemInfo(

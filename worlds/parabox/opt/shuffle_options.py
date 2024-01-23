@@ -6,7 +6,6 @@ from worlds.parabox.external.opt.shuffle_option_values import ShufflePriorityVal
     ShuffleUndoValues, UndoExtraCopyCountValues, ShuffleBoxSizesValues, ShuffleNestedGoalValues, ShufflePossessValues
 
 
-# noinspection DuplicatedCode
 class ShufflePriority(ShufflePriorityValues, Choice):
     __doc__ = ShufflePriorityValues.__doc__
 
@@ -47,7 +46,6 @@ class ShuffleOne(ShuffleOneValues, Choice):
     __doc__ = ShuffleOneValues.__doc__
 
 
-# noinspection DuplicatedCode
 class ShuffleRecursion(ShuffleRecursionValues, Choice):
     __doc__ = ShuffleRecursionValues.__doc__
 

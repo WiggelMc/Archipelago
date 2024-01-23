@@ -81,3 +81,13 @@ class WorldCountValues:
     range_start = 1
     range_end = 100
     default = 20
+
+
+class WorldSelectionBiasValues:
+    """
+    TODO: Option Description
+    """
+    display_name = "World Selection Bias"
+    range_start = 1
+    range_end = 100
+    default = 70
