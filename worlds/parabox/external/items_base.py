@@ -55,7 +55,16 @@ class ItemInfoGroupAssembly(ABCMeta):
         return super(ItemInfoGroupAssembly, cls).__new__(cls, name, bases, attrs)
 
 
-class ItemInfoGroup:
+@dataclass(frozen=True)
+class ParaboxItemGenerator:
+    @property
+    @abstractmethod
+    def items(self) -> list[ParaboxItemInfo]:
+        pass
+
+
+@dataclass(frozen=True)
+class ItemInfoGroup(ParaboxItemGenerator):
     # superclass
     # @property items: list[ParaboxItemDefinition]
     # def get_pool_items(options) to get items in pool for options
@@ -69,20 +78,41 @@ class ItemInfoGroup:
 
     @classmethod
     @abstractmethod
+    def get_all_items(cls) -> list[ParaboxItemInfo]:
+        pass
+
+    @property
+    def items(self) -> list[ParaboxItemInfo]:
+        return self.get_all_items()
+
+    @classmethod
+    @abstractmethod
     def get_option(cls, options: ParaboxOptionValues) -> int:
         pass
 
 
 class SingleItemInfoGroup(ItemInfoGroup, ABC):
+    @classmethod
+    def get_all_items(cls) -> list[ParaboxItemInfo]:
+        return [cls.single]
+
     single: ParaboxSingleItemInfo
 
 
 class ProgressiveItemInfoGroup(ItemInfoGroup, ABC):
+    @classmethod
+    def get_all_items(cls) -> list[ParaboxItemInfo]:
+        return [cls.single, cls.progressive]
+
     single: ParaboxSingleItemInfo
     progressive: ParaboxProgressiveItemInfo
 
 
 class SeperateItemInfoGroup(ItemInfoGroup, ABC, metaclass=ItemInfoGroupAssembly):
+    @classmethod
+    def get_all_items(cls) -> list[ParaboxItemInfo]:
+        return [cls.single, cls.progressive] + list(cls.seperate_items.values())
+
     single: ParaboxSingleItemInfo
     progressive: ParaboxProgressiveItemInfo
     seperate_items: dict[str, ParaboxSeperateItemInfo]

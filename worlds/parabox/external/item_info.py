@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import dataclasses
-import functools
-from abc import abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
-from worlds.parabox.external import shuffle_items
+import shuffle_items, world_items, key_items
+from key_items import key_name_to_symbol
+from items_base import ParaboxItemGenerator
 
 
 class ParaboxItemType(Enum):
@@ -28,6 +28,7 @@ class ParaboxItemInfo:
 
     def typed(self, item_type: ParaboxItemType):
         return dataclasses.replace(self, item_type=item_type)
+
 
 class ParaboxItemInfoDefinitions:
     slowness_trap = ParaboxItemInfo("Slowness Trap", 40, ParaboxItemType.TRAP)
@@ -80,133 +81,31 @@ class ParaboxItemInfoDefinitions:
     # EXPERIMENTAL #
 
 
-class ParaboxItemInfoGroupDefinitions:
-    priority = shuffle_items.Priority
-    extrude = shuffle_items.Extrude
-    inner_push = shuffle_items.InnerPush
-    block = shuffle_items.Block
-    level_select = shuffle_items.LevelSelect
-    clone = shuffle_items.Clone
-    open_main_level = shuffle_items.Open
-    even = shuffle_items.Even
-    oblong = shuffle_items.Oblong
-    one = shuffle_items.One
-    
-    recursion = shuffle_items.Recursion
-    flip = shuffle_items.Flip
-    friend = shuffle_items.Friend
-    infinite_exit_block = shuffle_items.InfiniteExitBlock
-    infinite_enter_block = shuffle_items.InfiniteEnterBlock
-    player = shuffle_items.Player
-
-    undo = shuffle_items.Undo
-    possess = shuffle_items.Possess
-    nested_button = shuffle_items.NestedButton
-
-
-@dataclass(frozen=True)
-class ParaboxItemGenerator:
-    start_id: int
-
-    @property
-    @abstractmethod
-    def items(self) -> list[ParaboxItemInfo]:
-        pass
-
-
-@dataclass(frozen=True)
-class KeyDefinition:
-    name: str
-    symbol: str
-    id: int
-
-
-@dataclass(frozen=True)
-class KeyItemDefinition(KeyDefinition):
-    pass
-
-
-key_definitions = [
-    KeyDefinition("Alpha", "α", 1),
-    KeyDefinition("Beta", "β", 2),
-    KeyDefinition("Gamma", "γ", 3),
-    KeyDefinition("Delta", "δ", 4),
-    KeyDefinition("Zeta", "ζ", 5),
-    KeyDefinition("Eta", "η", 6),
-    KeyDefinition("Theta", "θ", 7),
-    KeyDefinition("Iota", "ι", 8),
-    KeyDefinition("Kappa", "κ", 9),
-    KeyDefinition("Lambda", "λ", 10),
-    KeyDefinition("Mu", "μ", 11),
-    KeyDefinition("Nu", "ν", 12),
-    KeyDefinition("Xi", "ξ", 13),
-    KeyDefinition("Omikron", "ο", 14),
-    KeyDefinition("Pi", "π", 15),
-    KeyDefinition("Rho", "ρ", 16),
-    KeyDefinition("Sigma", "σ", 17),
-    KeyDefinition("Tau", "τ", 18),
-    KeyDefinition("Upsilon", "υ", 19),
-    KeyDefinition("Phi", "φ", 20),
-    KeyDefinition("Chi", "χ", 21),
-    KeyDefinition("Psi", "ψ", 23),
-    KeyDefinition("Omega", "ω", 24)
-]
-
-world_name_definitions = [
-    "Intro",
-    "Enter",
-    "Empty",
-    "Eat",
-    "Reference",
-    "Swap",
-    "Center",
-    "Clone",
-    "Transfer",
-    "Open",
-    "Flip",
-    "Cycle",
-    "Player",
-    "Possess",
-    "Wall",
-    "Infinite Exit",
-    "Infinite Enter",
-    "Multi Infinite",
-    "Reception",
-    "Challenge",
-    "Gallery",
-    "Appendix",
-    "Appendix: Priority",
-    "Appendix: Extrude",
-    "Appendix: Inner Push"
-]
-
-
-@dataclass(frozen=True)
-class KeyItemGenerator(ParaboxItemGenerator):
-    @functools.cached_property
-    def items(self) -> list[ParaboxItemInfo]:
-        return [ParaboxItemInfo(k.name, k.id) for k in self.definitions]
-
-    @functools.cached_property
-    def definitions(self) -> list[KeyItemDefinition]:
-        return [KeyItemDefinition(f"{k.name} Key", k.symbol, self.start_id + k.id) for k in key_definitions]
-
-
-@dataclass(frozen=True)
-class LevelSelectItemGenerator(ParaboxItemGenerator):
-    @functools.cached_property
-    def items(self) -> list[ParaboxItemInfo]:
-        return [ParaboxItemInfo(
-            f"Level Select ({name})",
-            self.start_id + idx,
-            ParaboxItemType.USEFUL
-        ) for idx, name in enumerate(world_name_definitions)]
-
-
 class ParaboxItemInfoGeneratorDefinitions:
-    keys = KeyItemGenerator(100)
-    level_selects = LevelSelectItemGenerator(200)
-    # TODO: Box Sizes
+    priority = shuffle_items.Priority()
+    extrude = shuffle_items.Extrude()
+    inner_push = shuffle_items.InnerPush()
+    block = shuffle_items.Block()
+    level_select = shuffle_items.LevelSelect()
+    clone = shuffle_items.Clone()
+    open_main_level = shuffle_items.Open()
+    even = shuffle_items.Even()
+    oblong = shuffle_items.Oblong()
+    one = shuffle_items.One()
+
+    recursion = shuffle_items.Recursion()
+    flip = shuffle_items.Flip()
+    friend = shuffle_items.Friend()
+    infinite_exit_block = shuffle_items.InfiniteExitBlock()
+    infinite_enter_block = shuffle_items.InfiniteEnterBlock()
+    player = shuffle_items.Player()
+    undo = shuffle_items.Undo()
+
+    possess = shuffle_items.Possess()
+    nested_button = shuffle_items.NestedButton()
+
+    keys = key_items.KeyItemGenerator(100)
+    level_selects = world_items.LevelSelectItemGenerator(200)
 
 
 def get_item_name_to_id():
@@ -224,7 +123,6 @@ def get_item_name_to_id():
 
 
 item_name_to_id = get_item_name_to_id()
-key_name_to_symbol = {k.name: k.symbol for k in key_definitions}
 
 
 def main():
@@ -234,6 +132,8 @@ def main():
     print_dict(item_name_to_id)
     print("\n" * 3)
     print_dict(key_name_to_symbol)
+    print("\n" * 3)
+    print(shuffle_items.Possess().items)
 
 
 if __name__ == '__main__':
