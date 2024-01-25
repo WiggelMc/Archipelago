@@ -25,6 +25,7 @@ class ParaboxItemInfo:
     def typed(self, item_type: ParaboxItemType):
         return dataclasses.replace(self, item_type=item_type)
 
+
 @dataclass(frozen=True)
 class ParaboxTrapItemInfo(ParaboxItemInfo):
     item_type: ParaboxItemType = ParaboxItemType.TRAP
@@ -67,6 +68,7 @@ class ParaboxItemGenerator:
     def items(self) -> list[ParaboxItemInfo]:
         pass
 
+
 @dataclass(frozen=True)
 class ItemInfoDefinition(ParaboxItemGenerator):
     @classmethod
@@ -77,6 +79,7 @@ class ItemInfoDefinition(ParaboxItemGenerator):
     @property
     def items(self) -> list[ParaboxItemInfo]:
         return self.get_all_items()
+
 
 class OptionDependent:
     @classmethod
