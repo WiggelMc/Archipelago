@@ -25,6 +25,11 @@ class ParaboxItemInfo:
     def typed(self, item_type: ParaboxItemType):
         return dataclasses.replace(self, item_type=item_type)
 
+@dataclass(frozen=True)
+class ParaboxTrapItemInfo(ParaboxItemInfo):
+    item_type: ParaboxItemType = ParaboxItemType.TRAP
+    pass
+
 
 @dataclass(frozen=True)
 class ParaboxSingleItemInfo(ParaboxItemInfo):
@@ -62,9 +67,35 @@ class ParaboxItemGenerator:
     def items(self) -> list[ParaboxItemInfo]:
         pass
 
+@dataclass(frozen=True)
+class ItemInfoDefinition(ParaboxItemGenerator):
+    @classmethod
+    @abstractmethod
+    def get_all_items(cls) -> list[ParaboxItemInfo]:
+        pass
+
+    @property
+    def items(self) -> list[ParaboxItemInfo]:
+        return self.get_all_items()
+
+class OptionDependent:
+    @classmethod
+    @abstractmethod
+    def get_option(cls, options: ParaboxOptionValues) -> int:
+        pass
+
 
 @dataclass(frozen=True)
-class ItemInfoGroup(ParaboxItemGenerator):
+class ItemInfoTrap(ItemInfoDefinition, OptionDependent, ABC):
+    @classmethod
+    def get_all_items(cls) -> list[ParaboxItemInfo]:
+        return [cls.item]
+
+    item: ParaboxTrapItemInfo
+
+
+@dataclass(frozen=True)
+class ItemInfoGroup(ItemInfoDefinition, OptionDependent, ABC):
     # superclass
     # @property items: list[ParaboxItemDefinition]
     # def get_pool_items(options) to get items in pool for options
@@ -75,20 +106,7 @@ class ItemInfoGroup(ParaboxItemGenerator):
     # one class contains all Items (getItems(options) and getAllItems)
     # Requirements are manually referenced by the world generators
     # Requirements can be used by the world for levels
-
-    @classmethod
-    @abstractmethod
-    def get_all_items(cls) -> list[ParaboxItemInfo]:
-        pass
-
-    @property
-    def items(self) -> list[ParaboxItemInfo]:
-        return self.get_all_items()
-
-    @classmethod
-    @abstractmethod
-    def get_option(cls, options: ParaboxOptionValues) -> int:
-        pass
+    pass
 
 
 class SingleItemInfoGroup(ItemInfoGroup, ABC):

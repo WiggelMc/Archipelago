@@ -31,12 +31,12 @@ class ParaboxItemInfo:
 
 
 class ParaboxItemInfoDefinitions:
-    slowness_trap = ParaboxItemInfo("Slowness Trap", 40, ParaboxItemType.TRAP)
-    zoom_in_trap = ParaboxItemInfo("Zoom In Trap", 41, ParaboxItemType.TRAP)
-    zoom_out_trap = ParaboxItemInfo("Zoom Out Trap", 42, ParaboxItemType.TRAP)
-    ascii_trap = ParaboxItemInfo("Ascii Trap", 43, ParaboxItemType.TRAP)
-    Rainbow_trap = ParaboxItemInfo("Rainbow Trap", 44, ParaboxItemType.TRAP)
-    control_trap = ParaboxItemInfo("Control Trap", 45, ParaboxItemType.TRAP)
+    slowness_trap =
+    zoom_in_trap =
+    zoom_out_trap = ParaboxItemInfo(, ParaboxItemType.TRAP)
+    ascii_trap = ParaboxItemInfo(, ParaboxItemType.TRAP)
+    Rainbow_trap = ParaboxItemInfo(, ParaboxItemType.TRAP)
+    control_trap = ParaboxItemInfo(, ParaboxItemType.TRAP)
 
     info = ParaboxItemInfo("Info", 46, ParaboxItemType.USEFUL)
     puzzle_skip = ParaboxItemInfo("Puzzle Skip", 47, ParaboxItemType.USEFUL)

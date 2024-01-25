@@ -40,6 +40,14 @@ class ParaboxOptionValues:
     shuffle_nested_goal: int
     shuffle_possess: int
 
+    # Trap Options
+    enable_control_trap: int
+    enable_rainbow_trap: int
+    enable_ascii_trap: int
+    enable_zoom_out_trap: int
+    enable_zoom_in_trap: int
+    enable_slowness_trap: int
+
     # Box Options
     box_types: int
 
