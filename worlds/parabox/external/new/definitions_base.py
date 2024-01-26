@@ -32,33 +32,20 @@ class ShuffleSingleOption(Option):
     Single = 2
 
 
+@dataclass(frozen=True)
+class SingleItemDef:
+    name: str
+    id: int
+
+
 class SingleItemDefinition(OptionProvider, ABC):
     @classmethod
     def option(cls, options: dict[str, int]) -> ShuffleSingleOption:
-        return ShuffleSingleOption(options[cls.key])
+        return ShuffleSingleOption(options["shuffle_" + cls.key])
 
-
-class Priority(SingleItemDefinition):
-    key = "shuffle_priority"
-    option_definition = OptionDefinition("Shuffle Priority", ShuffleSingleOption.Single, """
-        This Options does that
-        Bla
-        Bla
-        Bla
-    """)
+    single: SingleItemDef
 
 
 def remove_whitespace(text: str):
     return "\n".join([line.strip() for line in text.split("\n")])
 
-
-def main():
-    opt = {
-        "shuffle_priority": 2
-    }
-    print(Priority.option(opt))
-    print(remove_whitespace(Priority.option_definition.description))
-
-
-if __name__ == '__main__':
-    main()
