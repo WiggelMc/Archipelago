@@ -1,6 +1,6 @@
 import typing
 
-from items_single import SingleItemDefinition, generate_single_item_definition
+from .items_single import SingleItemDefinition, generate_single_item_definition
 
 TAny = typing.TypeVar("TAny")
 

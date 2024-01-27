@@ -1,5 +1,5 @@
-from items_single import SingleItemDefinition, SingleOptionValue, SingleOption
-from generate_decorator import generate
+from .items_single import SingleItemDefinition, SingleOptionValue, SingleOption
+from .generate_decorator import generate
 
 
 @generate

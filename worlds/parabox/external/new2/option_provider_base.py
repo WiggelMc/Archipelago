@@ -19,3 +19,5 @@ class OptionProvider:
     @abstractmethod
     def option(cls, options: dict[str, int]) -> Option:
         pass
+
+    opt: Option

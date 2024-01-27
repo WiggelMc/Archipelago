@@ -1,10 +1,10 @@
 import typing
 from dataclasses import dataclass
 
-import common_text
-from items_base import StackedItemDefinition
-from option_provider_base import Option, OptionValue
-from string_case_utils import to_case, NameCase
+from . import common_text
+from .items_base import StackedItemDefinition
+from .option_provider_base import Option, OptionValue
+from .string_case_utils import to_case, NameCase
 
 
 class SingleOptionValue(OptionValue):
