@@ -1,6 +1,7 @@
 import typing
 from dataclasses import dataclass
 
+import common_text
 from items_base import StackedItemDefinition
 from option_provider_base import Option, OptionValue
 from string_case_utils import to_case, NameCase
@@ -12,7 +13,7 @@ class SingleOptionValue(OptionValue):
     Single = 2
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SingleOption(Option):
     default: SingleOptionValue
     description_text: str = None
@@ -43,24 +44,25 @@ def remove_whitespace(text: str):
 def format_description(text: str):
     return f"""
         {text}
-        Disabled: Element will not be present in the game
-        Unlocked: Element will be unlocked immediatly 
-        Single: Element will be shuffled as a Single Item
+        {common_text.shuffle_option_disabled_description}
+        {common_text.shuffle_option_unlocked_description}
+        {common_text.shuffle_option_single_description}
     """
 
 
 def generate_single_item_definition(cls: type[TSingleItemDefinition]) -> type[TSingleItemDefinition]:
-    name_snake = to_case(cls.__name__, NameCase.Pascal, NameCase.Snake)
-    name_word = to_case(cls.__name__, NameCase.Pascal, NameCase.WordTitle)
-    name_pascal = cls.__name__
+    name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
+    opt_name_pascal = f"{common_text.shuffle_option_prefix_pascal}{name_pascal}"
+    opt_name_snake = to_case(opt_name_pascal, NameCase.Pascal, NameCase.Snake)
+    opt_name_word = to_case(opt_name_pascal, NameCase.Pascal, NameCase.WordTitle)
 
     opt = cls.opt
     if not opt.key_name:
-        opt.key_name = f"shuffle_{name_snake}"
+        opt.key_name = opt_name_snake
     if not opt.class_name:
-        opt.class_name = f"Shuffle{name_pascal}"
+        opt.class_name = opt_name_pascal
     if not opt.display_name:
-        opt.display_name = f"Shuffle {name_word}"
+        opt.display_name = opt_name_word
     if (not opt.description) and opt.description_text:
         opt.description = format_description(opt.description_text)
     opt.description = remove_whitespace(opt.description)

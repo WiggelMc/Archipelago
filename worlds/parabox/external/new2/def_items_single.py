@@ -4,7 +4,7 @@ from generate_decorator import generate
 
 @generate
 class Priority(SingleItemDefinition):
-    opt = SingleOption(SingleOptionValue.Single, """
+    opt = SingleOption(default=SingleOptionValue.Single, description_text="""
         This does that
     """)
     single = None
