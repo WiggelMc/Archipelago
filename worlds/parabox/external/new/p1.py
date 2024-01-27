@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Any
 
 
@@ -14,24 +13,28 @@ class NotDefinedHereError(Exception):
     pass
 
 
-@dataclass
 class Acc:
-    attrs: dict[str, Any]
+    def __init__(self, attrs):
+        self._attrs = attrs
+
+    _attrs: dict[str, Any]
 
     def __setattr__(self, key, value):
-        if key == "attrs":
+        if key == "_attrs":
             super().__setattr__(key, value)
         else:
-            self.attrs[key] = value
+            self._attrs[key] = value
 
 
-@dataclass
 class Def:
-    attrs: dict[str, Any]
+    def __init__(self, attrs):
+        self._attrs = attrs
+
+    _attrs: dict[str, Any]
 
     def __getattr__(self, item):
         try:
-            return self.attrs[item]
+            return self._attrs[item]
         except KeyError as e:
             raise NotDefinedHereError() from e
 
