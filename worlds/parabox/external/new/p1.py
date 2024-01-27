@@ -1,3 +1,4 @@
+from abc import ABC, ABCMeta, abstractmethod
 from typing import Any
 
 
@@ -52,7 +53,7 @@ class MetaA(type):
         except NotDefinedHereError:
             pass
 
-        return super(MetaA, cls).__new__(cls, name, bases, attrs)
+        return super().__new__(cls, name, bases, attrs)
 
 
 class Combiner(Accessor, Definer, metaclass=MetaA):
@@ -66,17 +67,17 @@ class Tester(Combiner):
 class Tester2(Combiner):
     a_def = "Te  st2"
 
+    @abstractmethod
+    def f(self):
+        pass
 
-class Tester3(Tester2):
+
+class AbcMetaA(MetaA, ABCMeta):
     pass
 
 
-# class B(A):
-#     a = "A"
-
-
-# class B(metaclass=MetaA):
-#     a = 'B'
+class Tester3(Tester2, ABC, metaclass=AbcMetaA):
+    pass
 
 
 if __name__ == '__main__':
@@ -84,3 +85,4 @@ if __name__ == '__main__':
     print(Tester2.a_val)
     print(Tester3.a_val)
     print(Tester3.a_val)
+    print("  ")
