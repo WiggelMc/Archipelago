@@ -11,6 +11,13 @@ class Option(Enum):
 
 @dataclass(frozen=True)
 class OptionDefinition:
+    display_name: str | None = None
+    default: Option | None = None
+    description: str | None = None
+
+
+@dataclass(frozen=True)
+class ResolvedOption:
     display_name: str
     default: Option
     description: str
@@ -18,6 +25,7 @@ class OptionDefinition:
 
 class OptionProvider:
     option_definition: OptionDefinition
+    resolved_option: ResolvedOption
     key: str
 
     @classmethod
@@ -48,4 +56,3 @@ class SingleItemDefinition(OptionProvider, ABC):
 
 def remove_whitespace(text: str):
     return "\n".join([line.strip() for line in text.split("\n")])
-

@@ -10,7 +10,7 @@ def init():
 @generate
 class Priority(SingleItemDefinition):
     key = "priority"
-    option_definition = OptionDefinition("Shuffle Priority", ShuffleSingleOption.Single, """
+    option_definition = OptionDefinition(default=ShuffleSingleOption.Single, description="""
         This Options does that
         Bla
         Bla
@@ -23,6 +23,7 @@ def main():
     opt = {
         "shuffle_priority": 2
     }
+    print(Priority.option_definition)
     print(Priority.option(opt))
     print(remove_whitespace(Priority.option_definition.description))
 
