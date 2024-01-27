@@ -1,17 +1,14 @@
 import typing
 
 from Options import PerGameCommonOptions, Choice
-from .d_items_single import Priority
-from .option_provider_base import OptionProvider
+from .option_access import get_option_providers
 
-optionProviders: list[OptionProvider] = [
-    Priority()
-]
+option_providers = get_option_providers()
 
 
 def get_option_dict():
     options = {}
-    for provider in optionProviders:
+    for provider in option_providers:
         opt = provider.opt
         opt_enum = type(opt.default)
         opt_dict = {f"option_{v.name}": v.value for v in opt_enum}

@@ -2,6 +2,10 @@ from .items_single import SingleItemDefinition, SingleOptionValue, SingleOption
 from .generate_decorator import generate
 
 
+def init():
+    pass
+
+
 @generate
 class Priority(SingleItemDefinition):
     opt = SingleOption(default=SingleOptionValue.Single, description_text="""
