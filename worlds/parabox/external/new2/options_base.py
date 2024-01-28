@@ -1,6 +1,5 @@
 import typing
 
-from . import common_values
 from .string_format_utils import remove_whitespace
 from .option_provider_base import EnumOption, Option
 from .string_case_utils import to_case, NameCase
@@ -14,8 +13,7 @@ class AutoEnumOption(EnumOption, AutoOption):
     pass
 
 
-def generate_option(opt: AutoOption, name_pascal: str, description_formatter: typing.Callable[[str], str]):
-    opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
+def generate_option(opt: AutoOption, opt_name_pascal: str, description_formatter: typing.Callable[[str], str]):
     opt_name_snake = to_case(opt_name_pascal, NameCase.Pascal, NameCase.Snake)
     opt_name_word = to_case(opt_name_pascal, NameCase.Pascal, NameCase.WordTitle)
 

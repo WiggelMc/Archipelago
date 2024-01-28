@@ -55,8 +55,9 @@ def format_description(text: str):
 
 def generate_single_item_definition(cls: type[TSingleItemDefinition]) -> type[TSingleItemDefinition]:
     name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
+    opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
 
-    generate_option(cls.opt, name_pascal, format_description)
+    generate_option(cls.opt, opt_name_pascal, format_description)
 
     items = [cls.single]
     generate_items(items, name_pascal)

@@ -67,8 +67,9 @@ def format_description(text: str):
 
 def generate_seperate_item_definition(cls: type[TSeperateItemDefinition]) -> type[TSeperateItemDefinition]:
     name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
+    opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
 
-    generate_option(cls.opt, name_pascal, format_description)
+    generate_option(cls.opt, opt_name_pascal, format_description)
 
     seperate_prefix = "seperate_"
     seperate_items: dict[str, SeperateReqItem] = {
