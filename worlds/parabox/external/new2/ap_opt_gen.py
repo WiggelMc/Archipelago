@@ -1,4 +1,6 @@
+import dataclasses
 import typing
+from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Choice
 from .option_access import get_enum_option_providers
@@ -29,7 +31,12 @@ def generate_options() -> type[TOptions]:
         "__annotations__": get_option_dict()
     })
     assert issubclass(options, PerGameCommonOptions)
+    options = dataclass(options)
     return options
 
 
 ParaboxOptions: type[TOptions] = generate_options()
+
+
+def options_to_dict(options: ParaboxOptions) -> dict[str, int]:
+    return options.as_dict(*[field.name for field in dataclasses.fields(ParaboxOptions)], casing="snake")
