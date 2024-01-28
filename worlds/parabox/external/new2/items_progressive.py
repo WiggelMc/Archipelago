@@ -3,21 +3,22 @@ from dataclasses import dataclass
 
 from . import common_values
 from .item_provider_base import PoolItem
-from .items_base import StackedItemDefinition, SingleReqItem, generate_items
+from .items_base import StackedItemDefinition, SingleItem, ProgressiveReqItem, generate_items
 from .option_provider_base import EnumOptionValue
 from .options_base import AutoEnumOption, generate_option
 from .string_case_utils import to_case, NameCase
 
 
-class SingleOptionValue(EnumOptionValue):
+class ProgressiveOptionValue(EnumOptionValue):
     Disabled = 0
     Unlocked = 1
     Single = 2
+    Progressive = 3
 
 
 @dataclass(kw_only=True)
-class SingleOption(AutoEnumOption):
-    default: SingleOptionValue
+class ProgressiveOption(AutoEnumOption):
+    default: ProgressiveOptionValue
     description_text: str = None
     display_name: str = None
     description: str = None
@@ -25,23 +26,27 @@ class SingleOption(AutoEnumOption):
     key_name: str = None
 
 
-class SingleItemDefinition(StackedItemDefinition):
+class ProgressiveItemDefinition(StackedItemDefinition):
     @classmethod
     def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
         match cls.option(options):
-            case SingleOptionValue.Single:
+            case ProgressiveOptionValue.Single:
                 return [cls.single]
+            case ProgressiveOptionValue.Progressive:
+                return [cls.progressive] * cls.progressive_amount
         return []
 
     @classmethod
-    def option(cls, options: dict[str, int]) -> SingleOptionValue:
-        return SingleOptionValue(options[cls.opt.key_name])
+    def option(cls, options: dict[str, int]) -> ProgressiveOptionValue:
+        return ProgressiveOptionValue(options[cls.opt.key_name])
 
-    single: SingleReqItem
-    opt: SingleOption
+    single: SingleItem
+    progressive: ProgressiveReqItem
+    progressive_amount: int
+    opt: ProgressiveOption
 
 
-TSingleItemDefinition = typing.TypeVar("TSingleItemDefinition", bound=SingleItemDefinition)
+TProgressiveItemDefinition = typing.TypeVar("TProgressiveItemDefinition", bound=ProgressiveItemDefinition)
 
 
 def format_description(text: str):
@@ -50,15 +55,16 @@ def format_description(text: str):
         {common_values.shuffle_option_disabled_description}
         {common_values.shuffle_option_unlocked_description}
         {common_values.shuffle_option_single_description}
+        {common_values.shuffle_option_progressive_description}
     """
 
 
-def generate_single_item_definition(cls: type[TSingleItemDefinition]) -> type[TSingleItemDefinition]:
+def generate_progressive_item_definition(cls: type[TProgressiveItemDefinition]) -> type[TProgressiveItemDefinition]:
     name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
 
     generate_option(cls.opt, name_pascal, format_description)
 
-    items = [cls.single]
+    items = [cls.single, cls.progressive]
     generate_items(items, name_pascal)
     cls.items = items
 

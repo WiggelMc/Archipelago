@@ -1,2 +1,2 @@
 class Requirement:
-    pass
+    enabled: bool

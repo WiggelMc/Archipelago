@@ -1,5 +1,9 @@
 item_base_id = 4_974_322_000
+location_base_id = item_base_id
+
 shuffle_option_prefix_pascal = "Shuffle"
+progressive_item_prefix_word = "Progressive"
+
 shuffle_option_disabled_description = """
     Disabled: Element will not be present in the game
 """

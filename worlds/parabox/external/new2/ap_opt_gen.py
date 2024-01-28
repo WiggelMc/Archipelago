@@ -1,9 +1,9 @@
 import typing
 
 from Options import PerGameCommonOptions, Choice
-from .option_access import get_option_providers
+from .option_access import get_enum_option_providers
 
-option_providers = get_option_providers()
+option_providers = get_enum_option_providers()
 
 
 def get_option_dict():
