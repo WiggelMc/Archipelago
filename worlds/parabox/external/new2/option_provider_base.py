@@ -1,14 +1,11 @@
 from abc import abstractmethod
 from enum import Enum
-
-
-class OptionValue(Enum):
-    pass
+from typing import Any
 
 
 class Option:
     display_name: str
-    default: OptionValue
+    default: Any
     description: str
     class_name: str
     key_name: str
@@ -21,3 +18,35 @@ class OptionProvider:
         pass
 
     opt: Option
+
+
+class EnumOptionValue(Enum):
+    pass
+
+
+class EnumOption(Option):
+    default: EnumOptionValue
+
+
+class EnumOptionProvider(OptionProvider):
+    @classmethod
+    @abstractmethod
+    def option(cls, options: dict[str, int]) -> EnumOption:
+        pass
+
+    opt: EnumOption
+
+
+class RangeOption(Option):
+    default: int
+    min: int
+    max: int
+
+
+class RangeOptionProvider(OptionProvider):
+    @classmethod
+    @abstractmethod
+    def option(cls, options: dict[str, int]) -> RangeOption:
+        pass
+
+    opt: RangeOption

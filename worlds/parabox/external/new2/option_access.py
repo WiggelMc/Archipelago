@@ -1,4 +1,4 @@
-from .generate_decorator import option_providers
+from .generate_decorator import enum_option_providers
 from . import d_items_single
 
 initialized = False
@@ -18,4 +18,4 @@ def init():
 
 def get_option_providers():
     init()
-    return option_providers
+    return enum_option_providers

@@ -3,18 +3,18 @@ from dataclasses import dataclass
 
 from . import common_text
 from .items_base import StackedItemDefinition
-from .option_provider_base import Option, OptionValue
+from .option_provider_base import EnumOption, EnumOptionValue
 from .string_case_utils import to_case, NameCase
 
 
-class SingleOptionValue(OptionValue):
+class SingleOptionValue(EnumOptionValue):
     Disabled = 0
     Unlocked = 1
     Single = 2
 
 
 @dataclass(kw_only=True)
-class SingleOption(Option):
+class SingleOption(EnumOption):
     default: SingleOptionValue
     description_text: str = None
     display_name: str = None
