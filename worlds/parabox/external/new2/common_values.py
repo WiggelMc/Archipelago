@@ -1,3 +1,4 @@
+item_base_id = 4_974_322_000
 shuffle_option_prefix_pascal = "Shuffle"
 shuffle_option_disabled_description = """
     Disabled: Element will not be present in the game
