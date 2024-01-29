@@ -1,3 +1,4 @@
+import typing
 from abc import abstractmethod
 from enum import Enum
 from typing import Any
@@ -25,6 +26,7 @@ class EnumOptionValue(Enum):
 
 
 class EnumOption(Option):
+    enum: typing.ClassVar[type[EnumOptionValue]]
     default: EnumOptionValue
 
 

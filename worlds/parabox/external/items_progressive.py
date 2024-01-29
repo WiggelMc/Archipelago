@@ -25,6 +25,7 @@ class ProgressiveOption(AutoEnumOption):
     description: str = None
     class_name: str = None
     key_name: str = None
+    enum = ProgressiveOptionValue
 
 
 def format_description(text: str):

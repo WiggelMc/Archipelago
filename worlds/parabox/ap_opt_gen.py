@@ -12,7 +12,7 @@ def get_option_dict():
     options = {}
     for provider in option_providers:
         opt = provider.opt
-        opt_enum = type(opt.default)
+        opt_enum = opt.enum
         opt_dict = {f"option_{v.name}": v.value for v in opt_enum}
         opt_dict.update({
             "default": opt.default.value,

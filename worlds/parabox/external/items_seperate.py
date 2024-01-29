@@ -26,6 +26,7 @@ class SeperateOption(AutoEnumOption):
     description: str = None
     class_name: str = None
     key_name: str = None
+    enum = SeperateOptionValue
 
 
 def format_description(text: str):

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import typing
 from dataclasses import dataclass
 
@@ -24,6 +25,7 @@ class SingleOption(AutoEnumOption):
     description: str = None
     class_name: str = None
     key_name: str = None
+    enum = SingleOptionValue
 
 
 def format_description(text: str):
