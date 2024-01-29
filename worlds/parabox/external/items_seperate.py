@@ -1,3 +1,4 @@
+from __future__ import annotations
 import typing
 from dataclasses import dataclass
 
@@ -25,33 +26,6 @@ class SeperateOption(AutoEnumOption):
     description: str = None
     class_name: str = None
     key_name: str = None
-
-
-class SeperateItemDefinition(StackedItemDefinition):
-    @classmethod
-    def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
-        match cls.option(options):
-            case SeperateOptionValue.Single:
-                return [cls.single]
-            case SeperateOptionValue.Progressive:
-                return [cls.progressive] * cls.progressive_amount
-            case SeperateOptionValue.Seperate:
-                return list(cls.seperate_items.values())
-        return []
-
-    @classmethod
-    def option(cls, options: dict[str, int]) -> SeperateOptionValue:
-        return SeperateOptionValue(options[cls.opt.key_name])
-
-    progressive_amount: int
-    seperate_items: dict[str, SeperateReqItem]
-
-    single: SingleItem
-    progressive: ProgressiveItem
-    opt: SeperateOption
-
-
-TSeperateItemDefinition = typing.TypeVar("TSeperateItemDefinition", bound=SeperateItemDefinition)
 
 
 def format_description(text: str):
@@ -87,3 +61,32 @@ def generate_seperate_item_definition(cls: type[TSeperateItemDefinition]) -> typ
     cls.items = items
 
     return cls
+
+
+class SeperateItemDefinition(StackedItemDefinition):
+    generate = generate_seperate_item_definition
+
+    @classmethod
+    def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
+        match cls.option(options):
+            case SeperateOptionValue.Single:
+                return [cls.single]
+            case SeperateOptionValue.Progressive:
+                return [cls.progressive] * cls.progressive_amount
+            case SeperateOptionValue.Seperate:
+                return list(cls.seperate_items.values())
+        return []
+
+    @classmethod
+    def option(cls, options: dict[str, int]) -> SeperateOptionValue:
+        return SeperateOptionValue(options[cls.opt.key_name])
+
+    progressive_amount: int
+    seperate_items: dict[str, SeperateReqItem]
+
+    single: SingleItem
+    progressive: ProgressiveItem
+    opt: SeperateOption
+
+
+TSeperateItemDefinition = typing.TypeVar("TSeperateItemDefinition", bound=SeperateItemDefinition)

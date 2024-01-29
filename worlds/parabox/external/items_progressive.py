@@ -1,3 +1,4 @@
+from __future__ import annotations
 import typing
 from dataclasses import dataclass
 
@@ -26,29 +27,6 @@ class ProgressiveOption(AutoEnumOption):
     key_name: str = None
 
 
-class ProgressiveItemDefinition(StackedItemDefinition):
-    @classmethod
-    def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
-        match cls.option(options):
-            case ProgressiveOptionValue.Single:
-                return [cls.single]
-            case ProgressiveOptionValue.Progressive:
-                return [cls.progressive] * cls.progressive_amount
-        return []
-
-    @classmethod
-    def option(cls, options: dict[str, int]) -> ProgressiveOptionValue:
-        return ProgressiveOptionValue(options[cls.opt.key_name])
-
-    single: SingleItem
-    progressive: ProgressiveReqItem
-    progressive_amount: int
-    opt: ProgressiveOption
-
-
-TProgressiveItemDefinition = typing.TypeVar("TProgressiveItemDefinition", bound=ProgressiveItemDefinition)
-
-
 def format_description(text: str):
     return f"""
         {text}
@@ -70,3 +48,28 @@ def generate_progressive_item_definition(cls: type[TProgressiveItemDefinition]) 
     cls.items = items
 
     return cls
+
+
+class ProgressiveItemDefinition(StackedItemDefinition):
+    generate = generate_progressive_item_definition
+
+    @classmethod
+    def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
+        match cls.option(options):
+            case ProgressiveOptionValue.Single:
+                return [cls.single]
+            case ProgressiveOptionValue.Progressive:
+                return [cls.progressive] * cls.progressive_amount
+        return []
+
+    @classmethod
+    def option(cls, options: dict[str, int]) -> ProgressiveOptionValue:
+        return ProgressiveOptionValue(options[cls.opt.key_name])
+
+    single: SingleItem
+    progressive: ProgressiveReqItem
+    progressive_amount: int
+    opt: ProgressiveOption
+
+
+TProgressiveItemDefinition = typing.TypeVar("TProgressiveItemDefinition", bound=ProgressiveItemDefinition)

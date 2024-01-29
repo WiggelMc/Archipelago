@@ -1,3 +1,4 @@
+from __future__ import annotations
 import typing
 from dataclasses import dataclass
 
@@ -25,25 +26,6 @@ class SingleOption(AutoEnumOption):
     key_name: str = None
 
 
-class SingleItemDefinition(StackedItemDefinition):
-    @classmethod
-    def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
-        match cls.option(options):
-            case SingleOptionValue.Single:
-                return [cls.single]
-        return []
-
-    @classmethod
-    def option(cls, options: dict[str, int]) -> SingleOptionValue:
-        return SingleOptionValue(options[cls.opt.key_name])
-
-    single: SingleReqItem
-    opt: SingleOption
-
-
-TSingleItemDefinition = typing.TypeVar("TSingleItemDefinition", bound=SingleItemDefinition)
-
-
 def format_description(text: str):
     return f"""
         {text}
@@ -64,3 +46,24 @@ def generate_single_item_definition(cls: type[TSingleItemDefinition]) -> type[TS
     cls.items = items
 
     return cls
+
+
+class SingleItemDefinition(StackedItemDefinition):
+    generate = generate_single_item_definition
+
+    @classmethod
+    def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
+        match cls.option(options):
+            case SingleOptionValue.Single:
+                return [cls.single]
+        return []
+
+    @classmethod
+    def option(cls, options: dict[str, int]) -> SingleOptionValue:
+        return SingleOptionValue(options[cls.opt.key_name])
+
+    single: SingleReqItem
+    opt: SingleOption
+
+
+TSingleItemDefinition = typing.TypeVar("TSingleItemDefinition", bound=SingleItemDefinition)
