@@ -30,9 +30,19 @@ class ItemProvider(Generator):
         item_providers.append(cls())
         super()._generate()
 
+    items: list[Item]
+
+
+item_pool_providers: list[ItemPoolProvider] = []
+
+
+class ItemPoolProvider(Generator):
+    @classmethod
+    def _generate(cls):
+        item_pool_providers.append(cls())
+        super()._generate()
+
     @classmethod
     @abstractmethod
     def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
         pass
-
-    items: list[Item]

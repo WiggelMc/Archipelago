@@ -1,5 +1,5 @@
 from . import d_items_single, d_items_progressive, d_items_seperate, d_items_trap, d_items_useful
-from .item_provider_base import item_providers
+from .item_provider_base import item_providers, item_pool_providers
 from .option_provider_base import enum_option_providers, range_option_providers, option_providers
 
 
@@ -15,6 +15,10 @@ class _GeneratorAccessor:
     @property
     def item_providers(self):
         return item_providers
+
+    @property
+    def item_pool_providers(self):
+        return item_pool_providers
 
     @property
     def option_providers(self):

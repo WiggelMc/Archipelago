@@ -2,13 +2,13 @@ from abc import ABC
 from dataclasses import dataclass
 
 from . import common_values
-from .item_provider_base import ItemProvider, PoolItem, ItemType
+from .item_provider_base import ItemPoolProvider, PoolItem, ItemType, ItemProvider
 from .option_provider_base import EnumOptionProvider
 from .requirements_base import Requirement
 from .string_case_utils import to_case, NameCase
 
 
-class StackedItemDefinition(EnumOptionProvider, ItemProvider, ABC):
+class StackedItemDefinition(EnumOptionProvider, ItemProvider, ItemPoolProvider, ABC):
     pass
 
 
