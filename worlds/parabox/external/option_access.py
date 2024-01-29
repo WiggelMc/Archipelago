@@ -1,11 +1,15 @@
 from .generate_decorator import enum_option_providers, range_option_providers, item_providers
-from . import d_items_single
+from . import d_items_single, d_items_progressive, d_items_seperate, d_items_trap, d_items_useful
 
 initialized = False
 
 
 def _init():
     d_items_single.init()
+    d_items_progressive.init()
+    d_items_seperate.init()
+    d_items_trap.init()
+    d_items_useful.init()
 
 
 def init():
