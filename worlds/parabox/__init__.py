@@ -4,8 +4,8 @@ from BaseClasses import Tutorial
 from worlds.AutoWorld import World, WebWorld
 from worlds.parabox.ap_opt_gen import ParaboxOptions
 from worlds.parabox.ap_item_gen import item_name_to_id
+from worlds.parabox.ap_preset_gen import options_presets
 
-# from worlds.parabox.external.presets import option_presets
 # from worlds.parabox.external.groups import item_name_groups
 
 PARABOX_GAME = "Patrick's Parabox"
@@ -22,7 +22,7 @@ class ParaboxWebWorld(WebWorld):
         "setup/en",
         ["Wiggel"]
     )]
-    # options_presets = option_presets
+    options_presets = options_presets
 
 
 class ParaboxWorld(World):
