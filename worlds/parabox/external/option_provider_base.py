@@ -1,7 +1,10 @@
+from __future__ import annotations
 import typing
 from abc import abstractmethod
 from enum import Enum
 from typing import Any
+
+from .generator import Generator
 
 
 class Option:
@@ -12,7 +15,15 @@ class Option:
     key_name: str
 
 
-class OptionProvider:
+option_providers: list[OptionProvider] = []
+
+
+class OptionProvider(Generator):
+    @classmethod
+    def _generate(cls):
+        option_providers.append(cls())
+        super()._generate()
+
     @classmethod
     @abstractmethod
     def option(cls, options: dict[str, int]) -> Option:
@@ -30,7 +41,15 @@ class EnumOption(Option):
     default: EnumOptionValue
 
 
+enum_option_providers: list[OptionProvider] = []
+
+
 class EnumOptionProvider(OptionProvider):
+    @classmethod
+    def _generate(cls):
+        enum_option_providers.append(cls())
+        super()._generate()
+
     @classmethod
     @abstractmethod
     def option(cls, options: dict[str, int]) -> EnumOption:
@@ -45,7 +64,15 @@ class RangeOption(Option):
     max: int
 
 
+range_option_providers: list[RangeOptionProvider] = []
+
+
 class RangeOptionProvider(OptionProvider):
+    @classmethod
+    def _generate(cls):
+        range_option_providers.append(cls())
+        super()._generate()
+
     @classmethod
     @abstractmethod
     def option(cls, options: dict[str, int]) -> RangeOption:

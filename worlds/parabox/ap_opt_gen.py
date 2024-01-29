@@ -3,14 +3,12 @@ import typing
 from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Choice
-from worlds.parabox.external.option_access import get_enum_option_providers
-
-option_providers = get_enum_option_providers()
+from worlds.parabox.external.generator_access import GeneratorAccessor
 
 
 def get_option_dict():
     options = {}
-    for provider in option_providers:
+    for provider in GeneratorAccessor.option_providers:
         opt = provider.opt
         opt_enum = opt.enum
         opt_dict = {f"option_{v.name}": v.value for v in opt_enum}

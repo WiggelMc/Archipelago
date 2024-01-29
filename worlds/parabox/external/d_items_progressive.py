@@ -1,6 +1,6 @@
-from worlds.parabox.external.generate_decorator import generate
-from worlds.parabox.external.items_base import SingleItem, ProgressiveReqItem
-from worlds.parabox.external.items_progressive import ProgressiveItemDefinition, ProgressiveOption, \
+from .generator import generate
+from .items_base import SingleItem, ProgressiveReqItem
+from .items_progressive import ProgressiveItemDefinition, ProgressiveOption, \
     ProgressiveOptionValue
 
 

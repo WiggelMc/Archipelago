@@ -1,5 +1,4 @@
 from __future__ import annotations
-import typing
 from dataclasses import dataclass
 
 from . import common_values
@@ -38,21 +37,18 @@ def format_description(text: str):
     """
 
 
-def generate_progressive_item_definition(cls: type[TProgressiveItemDefinition]) -> type[TProgressiveItemDefinition]:
-    name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
-    opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
-
-    generate_option(cls.opt, opt_name_pascal, format_description)
-
-    items = [cls.single, cls.progressive]
-    generate_items(items, name_pascal)
-    cls.items = items
-
-    return cls
-
-
 class ProgressiveItemDefinition(StackedItemDefinition):
-    generate = generate_progressive_item_definition
+    @classmethod
+    def _generate(cls):
+        name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
+        opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
+
+        generate_option(cls.opt, opt_name_pascal, format_description)
+
+        items = [cls.single, cls.progressive]
+        generate_items(items, name_pascal)
+        cls.items = items
+        super()._generate()
 
     @classmethod
     def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
@@ -71,6 +67,3 @@ class ProgressiveItemDefinition(StackedItemDefinition):
     progressive: ProgressiveReqItem
     progressive_amount: int
     opt: ProgressiveOption
-
-
-TProgressiveItemDefinition = typing.TypeVar("TProgressiveItemDefinition", bound=ProgressiveItemDefinition)

@@ -1,6 +1,6 @@
 from .items_single import SingleItemDefinition, SingleOptionValue, SingleOption
 from .items_base import SingleReqItem
-from .generate_decorator import generate
+from .generator import generate
 
 
 def init():
@@ -41,7 +41,7 @@ class Block(SingleItemDefinition):
 
 @generate
 class LevelSelect(SingleItemDefinition):
-    opt = SingleOption(default=SingleOptionValue.Single, description_text="""
+    opt = SingleOption(default=SingleOptionValue.Disabled, description_text="""
         TODO: Option Description
     """)
     single = SingleReqItem(id_offset=5)

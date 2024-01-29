@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import typing
 from dataclasses import dataclass
 
 from . import common_values
@@ -37,21 +36,18 @@ def format_description(text: str):
     """
 
 
-def generate_single_item_definition(cls: type[TSingleItemDefinition]) -> type[TSingleItemDefinition]:
-    name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
-    opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
-
-    generate_option(cls.opt, opt_name_pascal, format_description)
-
-    items = [cls.single]
-    generate_items(items, name_pascal)
-    cls.items = items
-
-    return cls
-
-
 class SingleItemDefinition(StackedItemDefinition):
-    generate = generate_single_item_definition
+    @classmethod
+    def _generate(cls):
+        name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
+        opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
+
+        generate_option(cls.opt, opt_name_pascal, format_description)
+
+        items = [cls.single]
+        generate_items(items, name_pascal)
+        cls.items = items
+        super()._generate()
 
     @classmethod
     def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
@@ -66,6 +62,3 @@ class SingleItemDefinition(StackedItemDefinition):
 
     single: SingleReqItem
     opt: SingleOption
-
-
-TSingleItemDefinition = typing.TypeVar("TSingleItemDefinition", bound=SingleItemDefinition)

@@ -1,5 +1,4 @@
 from __future__ import annotations
-import typing
 from dataclasses import dataclass
 
 from . import common_values
@@ -40,32 +39,29 @@ def format_description(text: str):
     """
 
 
-def generate_seperate_item_definition(cls: type[TSeperateItemDefinition]) -> type[TSeperateItemDefinition]:
-    name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
-    opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
-
-    generate_option(cls.opt, opt_name_pascal, format_description)
-
-    seperate_prefix = "seperate_"
-    seperate_items: dict[str, SeperateReqItem] = {
-        k[len(seperate_prefix):]: v for k, v in cls.__dict__.items()
-        if k.startswith(seperate_prefix) and k != "seperate_items"
-    }
-    seperate_items_list = list(seperate_items.values())
-
-    if (not hasattr(cls, "progressive_amount")) or cls.progressive_amount is None:
-        cls.progressive_amount = max((item.stage for item in seperate_items_list))
-
-    items = [cls.single, cls.progressive] + seperate_items_list
-    generate_items(items, name_pascal)
-    cls.seperate_items = seperate_items
-    cls.items = items
-
-    return cls
-
-
 class SeperateItemDefinition(StackedItemDefinition):
-    generate = generate_seperate_item_definition
+    @classmethod
+    def _generate(cls):
+        name_pascal = to_case(cls.__name__, NameCase.Pascal, NameCase.Pascal)
+        opt_name_pascal = f"{common_values.shuffle_option_prefix_pascal}{name_pascal}"
+
+        generate_option(cls.opt, opt_name_pascal, format_description)
+
+        seperate_prefix = "seperate_"
+        seperate_items: dict[str, SeperateReqItem] = {
+            k[len(seperate_prefix):]: v for k, v in cls.__dict__.items()
+            if k.startswith(seperate_prefix) and k != "seperate_items"
+        }
+        seperate_items_list = list(seperate_items.values())
+
+        if (not hasattr(cls, "progressive_amount")) or cls.progressive_amount is None:
+            cls.progressive_amount = max((item.stage for item in seperate_items_list))
+
+        items = [cls.single, cls.progressive] + seperate_items_list
+        generate_items(items, name_pascal)
+        cls.seperate_items = seperate_items
+        cls.items = items
+        super()._generate()
 
     @classmethod
     def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
@@ -88,6 +84,3 @@ class SeperateItemDefinition(StackedItemDefinition):
     single: SingleItem
     progressive: ProgressiveItem
     opt: SeperateOption
-
-
-TSeperateItemDefinition = typing.TypeVar("TSeperateItemDefinition", bound=SeperateItemDefinition)

@@ -1,6 +1,6 @@
-from worlds.parabox.external.generate_decorator import generate
-from worlds.parabox.external.items_base import SingleItem, ProgressiveItem, SeperateReqItem
-from worlds.parabox.external.items_seperate import SeperateItemDefinition, SeperateOption, SeperateOptionValue
+from .generator import generate
+from .items_base import SingleItem, ProgressiveItem, SeperateReqItem
+from .items_seperate import SeperateItemDefinition, SeperateOption, SeperateOptionValue
 
 
 def init():

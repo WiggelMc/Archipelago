@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from abc import abstractmethod
 from enum import Enum
+
+from .generator import Generator
 
 
 class ItemType(Enum):
@@ -17,7 +21,15 @@ class PoolItem(Item):
     type: ItemType
 
 
-class ItemProvider:
+item_providers: list[ItemProvider] = []
+
+
+class ItemProvider(Generator):
+    @classmethod
+    def _generate(cls):
+        item_providers.append(cls())
+        super()._generate()
+
     @classmethod
     @abstractmethod
     def pool_items(cls, options: dict[str, int]) -> list[PoolItem]:
