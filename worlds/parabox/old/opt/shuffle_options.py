@@ -1,6 +1,6 @@
 from Options import Choice, Range
-from worlds.parabox.external.decorators.docstrings import inherit_docstring
-from worlds.parabox.external.opt.shuffle_option_values import ShufflePriorityValues, ShuffleExtrudeValues, \
+from worlds.parabox.old.external.decorators.docstrings import inherit_docstring
+from worlds.parabox.old.external.opt.shuffle_option_values import ShufflePriorityValues, ShuffleExtrudeValues, \
     ShuffleInnerPushValues, ShuffleBlockValues, ShuffleLevelSelectValues, ShuffleCloneValues, ShuffleOpenValues, \
     ShuffleEvenValues, ShuffleOblongValues, ShuffleOneValues, ShuffleRecursionValues, ShuffleFlipValues, \
     ShuffleFriendValues, ShuffleInfiniteExitBlockValues, ShuffleInfiniteEnterBlockValues, ShufflePlayerValues, \

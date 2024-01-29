@@ -1,4 +1,4 @@
-from .option_access import get_item_providers
+from worlds.parabox.external.option_access import get_item_providers
 
 
 def generate_item_name_to_id() -> dict[str, int]:

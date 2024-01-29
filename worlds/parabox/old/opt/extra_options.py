@@ -1,6 +1,6 @@
 from Options import Choice, Range
-from worlds.parabox.external.decorators.docstrings import inherit_docstring
-from worlds.parabox.external.opt.extra_option_values import PriorityOrderValues, MaxFriendCountValues, \
+from worlds.parabox.old.external.decorators.docstrings import inherit_docstring
+from worlds.parabox.old.external.opt.extra_option_values import PriorityOrderValues, MaxFriendCountValues, \
     MaxInfiniteExitLevelValues, MaxInfiniteEnterLevelValues
 
 

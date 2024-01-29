@@ -1,6 +1,6 @@
 from Options import Choice, Range
-from worlds.parabox.external.decorators.docstrings import inherit_docstring
-from worlds.parabox.external.opt.world_option_values import GoalValues, GoalUnlockValues, GoalUnlockWorldCountValues, \
+from worlds.parabox.old.external.decorators.docstrings import inherit_docstring
+from worlds.parabox.external import GoalValues, GoalUnlockValues, GoalUnlockWorldCountValues, \
     LevelGenerationValues, WorldGenerationValues, WorldDoorKeysValues, WorldDoorKeyGroupCountValues, WorldCountValues, \
     WorldSelectionBiasValues
 

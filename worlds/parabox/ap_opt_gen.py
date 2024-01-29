@@ -3,7 +3,7 @@ import typing
 from dataclasses import dataclass
 
 from Options import PerGameCommonOptions, Choice
-from .option_access import get_enum_option_providers
+from worlds.parabox.external.option_access import get_enum_option_providers
 
 option_providers = get_enum_option_providers()
 

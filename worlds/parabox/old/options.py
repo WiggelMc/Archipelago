@@ -2,7 +2,8 @@ import dataclasses
 from dataclasses import dataclass
 from typing import Any
 
-from worlds.parabox.opt import world_options, shuffle_options, box_options, extra_options, logic_options
+from worlds.parabox.old.opt import shuffle_options
+from worlds.parabox.old.opt import logic_options, extra_options, box_options, world_options
 from Options import PerGameCommonOptions
 
 
